@@ -1,0 +1,90 @@
+     0	02 02 02  Frame type
+     1	00 00 00
+     2	07 07 07  Cell count    uint8
+     3	00 00 00
+     4	00 00 00
+     5	00 00 00
+     6	00 00 00
+     7	00 00 00
+     8	00 00 00  Balancing bitmask   uint32
+     9	00 00 00  Balacning bitmask
+    10	00 00 00  Balancing bitmask
+    11	00 00 00  Balancing bitmask
+    12	00 00 00
+    13	00 00 00
+    14	00 00 00
+    15	00 00 00
+    16	00 00 00
+    17	00 00 00
+    18	00 00 00
+    19	00 00 00
+    20	40 40 40  Balanced voltage    float32
+    21	56 56 56  Balanced voltage
+    22	66 66 66  Balanced voltage
+    23	66 66 66  Balacned voltage
+    24	40 40 40  Cell voltage 1      float32
+    25	53 53 53  Cell voltage 1
+    26	30 30 33  Cell voltage 1
+    27	a4 a4 33  Cell voltage 1
+    28	40 40 40  Cell voltage 2      float32
+    29	53 53 53  Cell voltage 2
+    30	3a 3a 3a  Cell voltage 2
+    31	e1 e1 e1  Cell voltage 2
+    32	40 40 40  Cell voltage 3      float32
+    33	53 53 53  Cell voltage 3
+    34	45 45 47  Cell voltage 3
+    35	1f 1f ae  Cell voltage 3
+    36	40 40 40  Cell voltage 4      float32
+    37	53 53 53  Cell voltage 4
+    38	38 3a 3a  Cell voltage 4
+    39	52 e1 e1  Cell voltage 4
+    40	40 40 40  Cell voltage 5      float32
+    41	53 53 53  Cell voltage 5
+    42	45 42 42  Cell voltage 5
+    43	1f 8f 8f  Cell voltage 5
+    44	40 40 40  Cell voltage 6      float32
+    45	53 53 53  Cell voltage 6
+    46	45 42 40  Cell voltage 6
+    47	1f 8f 00  Cell voltage 6
+    48	40 40 40  Cell voltage 7      float32
+    49	53 53 53  Cell voltage 7
+    50	3d 3d 3d  Cell voltage 7
+    51	71 71 71  Cell voltage 7
+    52	00 00 00  Cell voltage 8      float32
+    53	00 00 00  Cell voltage 8
+    54	00 00 00  Cell voltage 8
+    55	00 00 00  Cell voltage 8
+    56	00 00 00  Cell voltage 9      float32
+    57	00 00 00  Cell voltage 9
+    58	00 00 00  Cell voltage 9
+    59	00 00 00  Cell voltage 9
+    60	00 00 00  Cell voltage 10     float32
+    61	00 00 00  Cell voltage 10
+    62	00 00 00  Cell voltage 10
+    63	00 00 00  Cell voltage 10
+    64	00 00 00  Cell voltage 11     float32
+    65	00 00 00  Cell voltage 11
+    66	00 00 00  Cell voltage 11
+    67	00 00 00  Cell voltage 11
+    68	00 00 00  Cell voltage 12     float32
+    69	00 00 00  Cell voltage 12
+    70	00 00 00  Cell voltage 12
+    71	00 00 00  Cell voltage 12
+    72	00 00 00  Cell voltage 13      float32
+    73	00 00 00  Cell voltage 13
+    74	00 00 00  Cell voltage 13
+    75	00 00 00  Cell voltage 13
+    76	00 00 00  Cell voltage 14      float32
+    77	00 00 00  Cell voltage 14
+    78	00 00 00  Cell voltage 14
+    79	00 00 00  Cell voltage 14
+    80	00 00 00  Cell voltage 15      float32
+    81	00 00 00  Cell voltage 15
+    82	00 00 00  Cell voltage 15
+    83	00 00 00  Cell voltage 15
+    84	00 00 00  Cell voltage 16      float32
+    85	00 00 00  Cell voltage 16
+    86	00 00 00  Cell voltage 16
+    87	00 00 00  Cell voltage 16
+
+The cell info frame is probably longer if more cells are supported. The app is able the handle 24 cells.

@@ -1,0 +1,35 @@
+# MTU 128 bytes
+
+C5:01 + Password  Request status
+5B:02 + Password  Request cell info
+56:56 + Password  Retrieve settings
+
+D8:D8 + Password  Charging switch on
+D9:D9 + Password  Charging switch off
+
+85:85 + Password  Discharging switch on
+86:86 + Password  Discharging switch off
+
+AA:AA + Password  Clear charging cycles
+CA:CA + Password  Clear Total discharging energy
+CB:CB + Password  Clear Total charging energy
+
+B9:B9 + Password + 4 bytes float calibration value     Discharging calibration
+DE:DE + Password + 4 bytes float calibration value     Charging calibration
+
+2D:65 + Password + 4 bytes new password + 2 bytes CRC  Change password
+99:99 + Password + 99:99 + Data + 0D:0A:FE             Change bluetooth name
+
+
+85 55 00 BC 61 4E                          Discharging switch on
+86 00 00 BC 61 4E                          Discharging switch off
+D8 88 00 BC 61 4E                          Charging switch on
+D9 00 00 BC 61 4E                          Charging switch off
+CB 00 00 BC 61 4E                          Clear Total charging energy
+CA 00 00 BC 61 4E                          Clear Total discharging energy
+56 00 00 BC 61 4E                          Retrieve settings
+C5 65 00 BC 61 4E                          Request status
+5B 65 00 BC 61 4E                          Request cell info
+2D 65 00 BC 61 4E 00 00 00 00 00 00 01 01  Change password
+CC CC 00 00 00 00 00 00                    Restore factory settings
+AA 55 00 BC 61 4E                          Clear charging cycles

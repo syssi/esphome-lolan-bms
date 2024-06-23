@@ -1,0 +1,52 @@
+     0	01 01 01 01  Frame type                        uint8
+     1	00 00 00 00                                    uint8
+     2	03 03 03 03  Switch bitmask (Bit0: Discharging switch, Bit1: Charging switch)    uint8
+     3	00 00 00 00  Status bitmask                    uint8
+     4	41 41 41 41  Total voltage                     float32
+     5	b8 b8 b8 b8  Total voltage
+     6	e6 e7 e7 e6  Total voltage
+     7	b8 5c 0a 66  Total voltage
+     8	00 00 00 00  Negative current                  float32
+     9	00 00 00 00  Negative current
+    10	00 00 00 00  Negative current
+    11	00 00 00 00  Negative current
+    12	00 00 00 00  Current                           float32
+    13	00 00 00 00  Current
+    14	00 00 00 00  Current
+    15	00 00 00 00  Current
+    16	41 41 41 41  Temperature 1                     float32
+    17	d5 d5 d5 d5  Temperature 1
+    18	9f 9f a4 9f  Temperature 1
+    19	30 30 e0 30  Temperature 1
+    20	41 41 41 41  Temperature 2                     float32
+    21	cd cd cd cd  Temperature 2
+    22	0b 10 10 16  Temperature 2
+    23	30 e0 e0 80  Temperature 2
+    24	42 42 42 42  Total discharging energy          float32
+    25	9d 9d 9d 9d  Total discharging energy
+    26	93 93 93 93  Total discharging energy
+    27	20 20 20 20  Total discharging energy
+    28	42 42 42 42  Total charging energy             float32
+    29	47 47 47 47  Total charging energy
+    30	53 53 53 53  Total charging energy
+    31	ec ec ec ec  Total charging energy
+    32	00 00 00 00  Total runtime                      uint32
+    33	34 34 34 34  Total runtime
+    34	3f 3f 3f 3f  Total runtime
+    35	6e 6f 70 71  Total runtime
+    36	00 00 00 00  Charging cycles                    uint16
+    37	01 01 01 01  Charging cycles
+    38	00 00 00 00  State of charge                    uint16
+    39	27 27 27 27  State of charge
+
+
+*Status bitmask*
+
+Bit0   (1): Total voltage overcharge protection
+Bit1   (2): Single voltage overcharge protection
+Bit2   (4): Charge overcurrent protection
+Bit3   (8): Discharge overcurrent protection
+Bit4  (16): Total voltage overdischarge
+Bit5  (32): Single voltage overdischarge
+Bit6  (64): High temperature protection
+Bit7 (128): Short circuit protection

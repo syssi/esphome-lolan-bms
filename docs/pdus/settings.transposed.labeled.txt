@@ -1,0 +1,108 @@
+     0	03  Frame type                uint8
+     1	6c
+     2	00  BLE password              uint32
+     3	bc  BLE password
+     4	61  BLE password
+     5	4e  BLE password
+     6	0c  Output voltage offset     uint8
+     7	00  Input voltage offset      uint8
+     8	00  Max charging current      uint16
+     9	32  Max charging current 
+    10	00  Max discharging current   uint16
+    11	50  Max discharging current
+    12	08  Charging current zero     uint8
+    13	0f  Discharging current zero  uint8
+    14	07  Cell count                uint8
+    15	01  Battery type              uint8
+    16	ff  mNC2?                     uint16
+    17	fa  mNC2?
+    18	00  Cycle count               uint16
+    19	01  Cycle count
+    20	42  Battery capacity          float32
+    21	51  Battery capacity
+    22	09  Battery capacity
+    23	41  Battery capacity
+    24	40  Start balancing voltage   float32
+    25	56  Start balancing voltage
+    26	66  Start balancing voltage
+    27	66  Start balancing voltage
+    28	3f  
+    29	80
+    30	00
+    31	00
+    32	40  Reference discharging voltage  float32
+    33	b7  Reference discharging voltage
+    34	95  Reference discharging voltage
+    35	81  Reference discharging voltage
+    36	40  Referencecharging voltage      float32
+    37	b2  Referencecharging voltage
+    38	b8  Referencecharging voltage
+    39	52  Referencecharging voltage
+    40	41  Total discharging energy       float32
+    41	9a  Total discharging energy
+    42	00  Total discharging energy
+    43	00  Total discharging energy
+    44	41  Total charging energy          float32
+    45	cc  Total charging energy
+    46	00  Total charging energy
+    47	00  Total charging energy
+    48	40  mCell_voltage_discharge        float32
+    49	30  mCell_voltage_discharge
+    50	00  mCell_voltage_discharge
+    51	00  mCell_voltage_discharge
+    52	40  mCell_voltage_overcharge       float32
+    53	69  mCell_voltage_overcharge
+    54	99  mCell_voltage_overcharge
+    55	9a  mCell_voltage_overcharge
+    56	42  mMOS_Temperature_Protect
+    57	82  mMOS_Temperature_Protect
+    58	00  mMOS_Temperature_Protect
+    59	00  mMOS_Temperature_Protect
+    60	42  mCircuit_Temperature_Protect
+    61	82  mCircuit_Temperature_Protect
+    62	00  mCircuit_Temperature_Protect
+    63	00  mCircuit_Temperature_Protect
+    64	46  mTemperature_Adjustment
+    65	1c  mTemperature_Adjustment
+    66	40  mTemperature_Adjustment
+    67	00  mTemperature_Adjustment
+    68	cc  serial_number                  uint32
+    69	10  serial_number
+    70	f1  serial_number
+    71	52  serial_number
+    72	01  softDate                       uint32
+    73	34  softDate
+    74	8b  softDate
+    75	9a  softDate
+    76	40  lowpower                       float32
+    77	30  lowpower
+    78	00  lowpower
+    79	00  lowpower
+    80	40  mBattery4_Adjustment           float32
+    81	53  mBattery4_Adjustment
+    82	33  mBattery4_Adjustment
+    83	33  mBattery4_Adjustment
+    84	3c  mVoltage_Equal
+    85	23  mVoltage_Equal
+    86	d7  mVoltage_Equal
+    87	0a  mVoltage_Equal
+    88	41  mOvercharge_Release_Voltage
+    89	c0  mOvercharge_Release_Voltage
+    90	cc  mOvercharge_Release_Voltage
+    91	cd  mOvercharge_Release_Voltage
+    92	40  mOvercharge_Cell_voltage
+    93	5c  mOvercharge_Cell_voltage
+    94	cc  mOvercharge_Cell_voltage
+    95	cd  mOvercharge_Cell_voltage
+    96	41  mDischarge_Release_Voltage
+    97	a2  mDischarge_Release_Voltage
+    98	66  mDischarge_Release_Voltage
+    99	66  mDischarge_Release_Voltage
+   100	40  mDischarge_Cell_Voltage
+   101	39  mDischarge_Cell_Voltage
+   102	99  mDischarge_Cell_Voltage
+   103	9a  mDischarge_Cell_Voltage
+   104	35  CRC?
+   105	e2  CRC?
+   106	5a
+   107	a5
