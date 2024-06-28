@@ -18,9 +18,9 @@ static const uint8_t LOLAN_FRAME_TYPE_STATUS = 0x01;     // 40 bytes
 static const uint8_t LOLAN_FRAME_TYPE_CELL_INFO = 0x02;  // 40 bytes
 static const uint8_t LOLAN_FRAME_TYPE_SETTINGS = 0x03;   // 108 bytes
 
-static const uint16_t LOLAN_COMMAND_REQ_STATUS = 0xc565;     // c501
+static const uint16_t LOLAN_COMMAND_REQ_STATUS = 0xc565;     // 0xc501
 static const uint16_t LOLAN_COMMAND_REQ_CELL_INFO = 0x5b65;  // 0x5b02
-static const uint16_t LOLAN_COMMAND_REQ_SETTINGS = 0x5656;
+static const uint16_t LOLAN_COMMAND_REQ_SETTINGS = 0x5600;   // 0x5656
 
 static const uint8_t MAX_RESPONSE_SIZE = 108;
 static const uint8_t MAX_KNOWN_CELL_COUNT = 16;
@@ -78,7 +78,7 @@ void LolanBmsBle::gattc_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_t 
     case ESP_GATTC_REG_FOR_NOTIFY_EVT: {
       this->node_state = espbt::ClientState::ESTABLISHED;
 
-      this->send_command_(LOLAN_COMMAND_REQ_STATUS);
+      this->send_command(LOLAN_COMMAND_REQ_STATUS);
       break;
     }
     case ESP_GATTC_NOTIFY_EVT: {
@@ -101,7 +101,7 @@ void LolanBmsBle::update() {
     return;
   }
 
-  this->send_command_(LOLAN_COMMAND_REQ_STATUS);
+  this->send_command(LOLAN_COMMAND_REQ_STATUS);
 }
 
 void LolanBmsBle::on_lolan_bms_ble_data(const uint8_t &handle, const std::vector<uint8_t> &data) {
@@ -115,7 +115,7 @@ void LolanBmsBle::on_lolan_bms_ble_data(const uint8_t &handle, const std::vector
   switch (frame_type) {
     case LOLAN_FRAME_TYPE_STATUS:
       this->decode_status_data_(data);
-      this->send_command_(LOLAN_COMMAND_REQ_CELL_INFO);
+      this->send_command(LOLAN_COMMAND_REQ_CELL_INFO);
       break;
     case LOLAN_FRAME_TYPE_CELL_INFO:
       this->decode_cell_info_data_(data);
@@ -146,6 +146,8 @@ void LolanBmsBle::decode_status_data_(const std::vector<uint8_t> &data) {
   //  2    1  0x03                   Switch bitmask
   this->publish_state_(this->discharging_binary_sensor_, (bool) check_bit_(data[2], 1));
   this->publish_state_(this->charging_binary_sensor_, (bool) check_bit_(data[2], 2));
+  this->publish_state_(this->discharging_switch_, (bool) check_bit_(data[2], 1));
+  this->publish_state_(this->charging_switch_, (bool) check_bit_(data[2], 2));
 
   //  3    1  0x00                   Status bitmask
   this->publish_state_(this->error_bitmask_sensor_, data[3] * 1.0f);
@@ -392,10 +394,8 @@ void LolanBmsBle::dump_config() {  // NOLINT(google-readability-function-size,re
   LOG_SENSOR("", "Power", this->power_sensor_);
   LOG_SENSOR("", "Charging power", this->charging_power_sensor_);
   LOG_SENSOR("", "Discharging power", this->discharging_power_sensor_);
-  LOG_SENSOR("", "Capacity remaining", this->capacity_remaining_sensor_);
   LOG_SENSOR("", "Error bitmask", this->error_bitmask_sensor_);
   LOG_SENSOR("", "State of charge", this->state_of_charge_sensor_);
-  LOG_SENSOR("", "Nominal capacity", this->nominal_capacity_sensor_);
   LOG_SENSOR("", "Charging cycles", this->charging_cycles_sensor_);
   LOG_SENSOR("", "Min cell voltage", this->min_cell_voltage_sensor_);
   LOG_SENSOR("", "Max cell voltage", this->max_cell_voltage_sensor_);
@@ -438,6 +438,13 @@ void LolanBmsBle::publish_state_(sensor::Sensor *sensor, float value) {
   sensor->publish_state(value);
 }
 
+void LolanBmsBle::publish_state_(switch_::Switch *obj, const bool &state) {
+  if (obj == nullptr)
+    return;
+
+  obj->publish_state(state);
+}
+
 void LolanBmsBle::publish_state_(text_sensor::TextSensor *text_sensor, const std::string &state) {
   if (text_sensor == nullptr)
     return;
@@ -445,7 +452,7 @@ void LolanBmsBle::publish_state_(text_sensor::TextSensor *text_sensor, const std
   text_sensor->publish_state(state);
 }
 
-bool LolanBmsBle::send_command_(uint16_t function) {
+bool LolanBmsBle::send_command(uint16_t function) {
   uint8_t frame[6];
 
   frame[0] = function >> 8;  // function
@@ -456,6 +463,32 @@ bool LolanBmsBle::send_command_(uint16_t function) {
   frame[5] = 0x4e;           // password
 
   ESP_LOGD(TAG, "Send command (handle 0x%02X): %s", this->char_command_handle_,
+           format_hex_pretty(frame, sizeof(frame)).c_str());
+
+  auto status =
+      esp_ble_gattc_write_char(this->parent_->get_gattc_if(), this->parent_->get_conn_id(), this->char_command_handle_,
+                               sizeof(frame), frame, ESP_GATT_WRITE_TYPE_NO_RSP, ESP_GATT_AUTH_REQ_NONE);
+
+  if (status) {
+    ESP_LOGW(TAG, "[%s] esp_ble_gattc_write_char failed, status=%d", this->parent_->address_str().c_str(), status);
+  }
+
+  return (status == 0);
+}
+
+bool LolanBmsBle::send_factory_reset() {
+  uint8_t frame[8];
+
+  frame[0] = 0xCC;
+  frame[1] = 0xCC;
+  frame[2] = 0x00;
+  frame[3] = 0x00;
+  frame[4] = 0x00;
+  frame[5] = 0x00;
+  frame[6] = 0x00;
+  frame[7] = 0x00;
+
+  ESP_LOGD(TAG, "Send factory reset (handle 0x%02X): %s", this->char_command_handle_,
            format_hex_pretty(frame, sizeof(frame)).c_str());
 
   auto status =

@@ -15,6 +15,12 @@ LolanBmsBle = lolan_bms_ble_ns.class_(
     "LolanBmsBle", ble_client.BLEClientNode, cg.PollingComponent
 )
 
+LOLAN_BMS_BLE_COMPONENT_SCHEMA = cv.Schema(
+    {
+        cv.GenerateID(CONF_LOLAN_BMS_BLE_ID): cv.use_id(LolanBmsBle),
+    }
+)
+
 CONFIG_SCHEMA = (
     cv.Schema(
         {
