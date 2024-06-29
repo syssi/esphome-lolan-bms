@@ -171,6 +171,8 @@ class LolanBmsBle : public esphome::ble_client::BLEClientNode, public PollingCom
   }
 };
 
+uint16_t crc16(const uint8_t *data, uint8_t len);
+
 }  // namespace lolan_bms_ble
 }  // namespace esphome
 
