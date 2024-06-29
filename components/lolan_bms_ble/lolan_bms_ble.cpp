@@ -435,6 +435,7 @@ void LolanBmsBle::dump_config() {  // NOLINT(google-readability-function-size,re
   LOG_SENSOR("", "Cell Voltage 14", this->cells_[13].cell_voltage_sensor_);
   LOG_SENSOR("", "Cell Voltage 15", this->cells_[14].cell_voltage_sensor_);
   LOG_SENSOR("", "Cell Voltage 16", this->cells_[15].cell_voltage_sensor_);
+  LOG_SENSOR("", "Balancer voltage", this->balancer_voltage_sensor_);
   LOG_SENSOR("", "Total charged capacity", this->total_charged_capacity_sensor_);
   LOG_SENSOR("", "Total discharged capacity", this->total_discharged_capacity_sensor_);
 
