@@ -1,5 +1,5 @@
 
-03:4f:b5:e3  (055555555)  PopUp?
+21:1d:1a:e3  (555555555)  Password invalid
 35:8f:03:22  (898564898)  Data error
 21:b7:33:31  (565654321)  Configuration saved successfully
 21:98:ae:c5  (563654341)  Bluetooth name modified successfully

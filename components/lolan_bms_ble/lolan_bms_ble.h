@@ -41,7 +41,6 @@ class LolanBmsBle : public esphome::ble_client::BLEClientNode, public PollingCom
   void set_discharging_power_sensor(sensor::Sensor *discharging_power_sensor) {
     discharging_power_sensor_ = discharging_power_sensor;
   }
-
   void set_error_bitmask_sensor(sensor::Sensor *error_bitmask_sensor) { error_bitmask_sensor_ = error_bitmask_sensor; }
   void set_state_of_charge_sensor(sensor::Sensor *state_of_charge_sensor) {
     state_of_charge_sensor_ = state_of_charge_sensor;
@@ -49,7 +48,6 @@ class LolanBmsBle : public esphome::ble_client::BLEClientNode, public PollingCom
   void set_charging_cycles_sensor(sensor::Sensor *charging_cycles_sensor) {
     charging_cycles_sensor_ = charging_cycles_sensor;
   }
-
   void set_min_cell_voltage_sensor(sensor::Sensor *min_cell_voltage_sensor) {
     min_cell_voltage_sensor_ = min_cell_voltage_sensor;
   }
@@ -93,7 +91,6 @@ class LolanBmsBle : public esphome::ble_client::BLEClientNode, public PollingCom
   void set_charging_switch(switch_::Switch *charging_switch) { charging_switch_ = charging_switch; }
   void set_discharging_switch(switch_::Switch *discharging_switch) { discharging_switch_ = discharging_switch; }
 
-  void write_register(uint8_t address, uint16_t value);
   void on_lolan_bms_ble_data(const uint8_t &handle, const std::vector<uint8_t> &data);
   bool send_command(uint16_t function);
   bool send_factory_reset();
@@ -143,6 +140,7 @@ class LolanBmsBle : public esphome::ble_client::BLEClientNode, public PollingCom
   void decode_settings_data_(const std::vector<uint8_t> &data);
   void decode_status_data_(const std::vector<uint8_t> &data);
   void decode_cell_info_data_(const std::vector<uint8_t> &data);
+  void decode_confirmations_(const std::vector<uint8_t> &data);
   void publish_state_(binary_sensor::BinarySensor *binary_sensor, const bool &state);
   void publish_state_(sensor::Sensor *sensor, float value);
   void publish_state_(switch_::Switch *obj, const bool &state);

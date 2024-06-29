@@ -123,6 +123,11 @@ void LolanBmsBle::on_lolan_bms_ble_data(const uint8_t &handle, const std::vector
     case LOLAN_FRAME_TYPE_SETTINGS:
       this->decode_settings_data_(data);
       break;
+    case 0x35:
+    case 0x21:
+    case 0x2f:
+      this->decode_confirmations_(data);
+      break;
     default:
       ESP_LOGW(TAG, "Unhandled response received (frame_type 0x%02X): %s", frame_type,
                format_hex_pretty(&data.front(), data.size()).c_str());
@@ -403,6 +408,47 @@ void LolanBmsBle::decode_settings_data_(const std::vector<uint8_t> &data) {
 
   // 104   2  0x35 0xe2            CRC?
   // 106   2  0x5a 0xa5
+}
+
+void LolanBmsBle::decode_confirmations_(const std::vector<uint8_t> &data) {
+  auto lolan_get_16bit = [&](size_t i) -> uint16_t {
+    return (uint16_t(data[i + 0]) << 8) | (uint16_t(data[i + 1]) << 0);
+  };
+  auto lolan_get_32bit = [&](size_t i) -> uint32_t {
+    return (uint32_t(lolan_get_16bit(i + 0)) << 16) | (uint32_t(lolan_get_16bit(i + 2)) << 0);
+  };
+
+  if (data.size() < 4) {
+    ESP_LOGW(TAG, "Invalid confirmation frame length: %d", data.size());
+    return;
+  }
+
+  switch(lolan_get_32bit(0)) {
+    case 0x211d1ae3:
+      ESP_LOGE(TAG, "Invalid password");
+      break;
+    case 0x21b73331:
+      ESP_LOGI(TAG, "Settings updated successfully");
+      break;
+    case 0x2198aec5:
+      ESP_LOGI(TAG, "Bluetooth name updated successfully");
+      break;
+    case 0x2f9983ca:
+      ESP_LOGI(TAG, "Setting successful");
+      break;
+    case 0x358f0322:
+      ESP_LOGW(TAG, "Data error");
+      break;
+    case 0x35957f4a:
+      ESP_LOGI(TAG, "Password changed successfully");
+      break;
+    case 0x358b7635:
+      ESP_LOGI(TAG, "Current calibration successful");
+      break;
+    default:
+      ESP_LOGW(TAG, "Unhandled confirmation received (code 0x%08X): %s", code,
+               format_hex_pretty(&data.front(), data.size()).c_str());
+  }
 }
 
 void LolanBmsBle::dump_config() {  // NOLINT(google-readability-function-size,readability-function-size)
