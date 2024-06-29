@@ -402,6 +402,12 @@ void LolanBmsBle::decode_settings_data_(const std::vector<uint8_t> &data) {
   ESP_LOGI(TAG, "  Discharge cell voltage: %.3f V", ieee_float_(lolan_get_32bit(100)));
 
   // 104   2  0x35 0xe2            CRC?
+  ESP_LOGI(TAG, "  CRC: 0x%02X 0x%02X (0x%04X)", data[104], data[105], lolan_get_16bit(104));
+  uint16_t remote_crc = lolan_get_16bit(104);
+  uint16_t computed_crc = crc16(data.data(), 104);
+  ESP_LOGI(TAG, "  Remote CRC: 0x%04X", remote_crc);
+  ESP_LOGI(TAG, "  Computed CRC: 0x%04X", computed_crc);
+
   // 106   2  0x5a 0xa5
 }
 
