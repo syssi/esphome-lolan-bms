@@ -446,8 +446,7 @@ void LolanBmsBle::decode_confirmations_(const std::vector<uint8_t> &data) {
       ESP_LOGI(TAG, "Current calibration successful");
       break;
     default:
-      ESP_LOGW(TAG, "Unhandled confirmation received (code 0x%08X): %s", code,
-               format_hex_pretty(&data.front(), data.size()).c_str());
+      ESP_LOGW(TAG, "Unhandled confirmation received: %s", format_hex_pretty(&data.front(), data.size()).c_str());
   }
 }
 
