@@ -68,10 +68,10 @@ button:
       name: "${name} factory reset"
     reset_charging_cycles:
       name: "${name} reset charging cycles"
-    reset_total_charging_energy:
-      name: "${name} reset total charging energy"
-    reset_total_discharging_energy:
-      name: "${name} reset total discharging energy"
+    reset_total_charged_capacity:
+      name: "${name} reset total charged capacity"
+    reset_total_discharged_capacity:
+      name: "${name} reset total discharged capacity"
 
 sensor:
   - platform: lolan_bms_ble
@@ -144,6 +144,10 @@ sensor:
       name: "${name} total runtime"
     balancer_voltage:
       name: "${name} balancer voltage"
+    total_charged_capacity:
+      name: "${name} total charged capacity"
+    total_discharged_capacity:
+      name: "${name} total discharged capacity"
 
 text_sensor:
   - platform: lolan_bms_ble

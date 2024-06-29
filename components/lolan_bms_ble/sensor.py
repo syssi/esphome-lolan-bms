@@ -10,6 +10,7 @@ from esphome.const import (
     DEVICE_CLASS_POWER,
     DEVICE_CLASS_TEMPERATURE,
     DEVICE_CLASS_VOLTAGE,
+    DEVICE_CLASS_ENERGY,
     ICON_EMPTY,
     ICON_TIMELAPSE,
     STATE_CLASS_MEASUREMENT,
@@ -45,6 +46,8 @@ CONF_DELTA_CELL_VOLTAGE = "delta_cell_voltage"
 CONF_AVERAGE_CELL_VOLTAGE = "average_cell_voltage"
 CONF_TOTAL_RUNTIME = "total_runtime"
 CONF_BALANCER_VOLTAGE = "balancer_voltage"
+CONF_TOTAL_CHARGED_CAPACITY = "total_charged_capacity"
+CONF_TOTAL_DISCHARGED_CAPACITY = "total_discharged_capacity"
 
 CONF_CELL_VOLTAGE_1 = "cell_voltage_1"
 CONF_CELL_VOLTAGE_2 = "cell_voltage_2"
@@ -73,6 +76,8 @@ ICON_MAX_CELL_VOLTAGE = "mdi:battery-plus-outline"
 ICON_MIN_VOLTAGE_CELL = "mdi:battery-minus-outline"
 ICON_MAX_VOLTAGE_CELL = "mdi:battery-plus-outline"
 ICON_ERROR_BITMASK = "mdi:alert-circle-outline"
+ICON_TOTAL_CHARGED_CAPACITY = "mdi:battery-plus"
+ICON_TOTAL_DISCHARGED_CAPACITY = "mdi:battery-minus"
 
 UNIT_AMPERE_HOURS = "Ah"
 UNIT_SECONDS = "s"
@@ -115,9 +120,11 @@ SENSORS = [
     CONF_MIN_VOLTAGE_CELL,
     CONF_MAX_VOLTAGE_CELL,
     CONF_DELTA_CELL_VOLTAGE,
-    # CONF_AVERAGE_CELL_VOLTAGE,
+    CONF_AVERAGE_CELL_VOLTAGE,
     CONF_TOTAL_RUNTIME,
     CONF_BALANCER_VOLTAGE,
+    CONF_TOTAL_CHARGED_CAPACITY,
+    CONF_TOTAL_DISCHARGED_CAPACITY,
 ]
 
 # pylint: disable=too-many-function-args
@@ -361,6 +368,21 @@ CONFIG_SCHEMA = cv.Schema(
             device_class=DEVICE_CLASS_VOLTAGE,
             state_class=STATE_CLASS_MEASUREMENT,
         ),
+        cv.Optional(CONF_TOTAL_CHARGED_CAPACITY): sensor.sensor_schema(
+            unit_of_measurement=UNIT_AMPERE_HOURS,
+            icon=ICON_TOTAL_CHARGED_CAPACITY,
+            accuracy_decimals=3,
+            device_class=DEVICE_CLASS_ENERGY,
+            state_class=STATE_CLASS_TOTAL_INCREASING,
+        ),
+        cv.Optional(CONF_TOTAL_DISCHARGED_CAPACITY): sensor.sensor_schema(
+            unit_of_measurement=UNIT_AMPERE_HOURS,
+            icon=ICON_TOTAL_DISCHARGED_CAPACITY,
+            accuracy_decimals=3,
+            device_class=DEVICE_CLASS_ENERGY,
+            state_class=STATE_CLASS_TOTAL_INCREASING,
+        ),
+
     }
 )
 

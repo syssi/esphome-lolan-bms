@@ -38,14 +38,14 @@
     37	b2  Referencecharging voltage
     38	b8  Referencecharging voltage
     39	52  Referencecharging voltage
-    40	41  Total discharging energy       float32
-    41	9a  Total discharging energy
-    42	00  Total discharging energy
-    43	00  Total discharging energy
-    44	41  Total charging energy          float32
-    45	cc  Total charging energy
-    46	00  Total charging energy
-    47	00  Total charging energy
+    40	41  Total discharging capacity       float32
+    41	9a  Total discharging capacity
+    42	00  Total discharging capacity
+    43	00  Total discharging capacity
+    44	41  Total charging capacity          float32
+    45	cc  Total charging capacity
+    46	00  Total charging capacity
+    47	00  Total charging capacity
     48	40  mCell_voltage_discharge        float32
     49	30  mCell_voltage_discharge
     50	00  mCell_voltage_discharge

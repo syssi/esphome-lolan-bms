@@ -78,6 +78,12 @@ class LolanBmsBle : public esphome::ble_client::BLEClientNode, public PollingCom
   void set_balancer_voltage_sensor(sensor::Sensor *balancer_voltage_sensor) {
     balancer_voltage_sensor_ = balancer_voltage_sensor;
   }
+  void set_total_charged_capacity_sensor(sensor::Sensor *total_charged_capacity_sensor) {
+    total_charged_capacity_sensor_ = total_charged_capacity_sensor;
+  }
+  void set_total_discharged_capacity_sensor(sensor::Sensor *total_discharged_capacity_sensor) {
+    total_discharged_capacity_sensor_ = total_discharged_capacity_sensor;
+  }
 
   void set_errors_text_sensor(text_sensor::TextSensor *errors_text_sensor) { errors_text_sensor_ = errors_text_sensor; }
   void set_total_runtime_formatted_text_sensor(text_sensor::TextSensor *total_runtime_formatted_text_sensor) {
@@ -112,6 +118,8 @@ class LolanBmsBle : public esphome::ble_client::BLEClientNode, public PollingCom
   sensor::Sensor *average_cell_voltage_sensor_;
   sensor::Sensor *total_runtime_sensor_;
   sensor::Sensor *balancer_voltage_sensor_;
+  sensor::Sensor *total_charged_capacity_sensor_;
+  sensor::Sensor *total_discharged_capacity_sensor_;
 
   switch_::Switch *charging_switch_;
   switch_::Switch *discharging_switch_;

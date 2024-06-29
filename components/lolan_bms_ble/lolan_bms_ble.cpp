@@ -180,11 +180,11 @@ void LolanBmsBle::decode_status_data_(const std::vector<uint8_t> &data) {
   //  20   4  0x41 0xcd 0x0b 0x30    Temperature 2
   this->publish_state_(this->temperatures_[1].temperature_sensor_, ieee_float_(lolan_get_32bit(20)));
 
-  //  24   4  0x42 0x9d 0x93 0x20    Total discharging energy
-  ESP_LOGI(TAG, "  Total discharging energy: %.2f Ah", ieee_float_(lolan_get_32bit(24)));
+  //  24   4  0x42 0x9d 0x93 0x20    Total discharged capacity
+  this->publish_state_(this->total_discharged_capacity_sensor_, ieee_float_(lolan_get_32bit(24)));
 
-  //  28   4  0x42 0x47 0x53 0xec    Total charging energy
-  ESP_LOGI(TAG, "  Total charging energy: %.2f Ah", ieee_float_(lolan_get_32bit(28)));
+  //  28   4  0x42 0x47 0x53 0xec    Total charged capacity
+  this->publish_state_(this->total_charged_capacity_sensor_, ieee_float_(lolan_get_32bit(28)));
 
   //  32   4  0x00 0x34 0x3f 0x6e    Total runtime
   this->publish_state_(this->total_runtime_sensor_, lolan_get_32bit(32) * 1.0f);
@@ -346,11 +346,11 @@ void LolanBmsBle::decode_settings_data_(const std::vector<uint8_t> &data) {
   //  36   4  0x40 0xb2 0xb8 0x52  Reference charging voltage
   ESP_LOGI(TAG, "  Reference charging voltage: %f V", ieee_float_(lolan_get_32bit(36)));
 
-  //  40   4  0x41 0x9a 0x00 0x00  Total discharging energy
-  ESP_LOGI(TAG, "  Total discharging energy: %f Ah", ieee_float_(lolan_get_32bit(40)));
+  //  40   4  0x41 0x9a 0x00 0x00  Total discharging capacity
+  ESP_LOGI(TAG, "  Total discharging capacity: %f Ah", ieee_float_(lolan_get_32bit(40)));
 
-  //  44   4  0x41 0xcc 0x00 0x00  Total charging energy
-  ESP_LOGI(TAG, "  Total charging energy: %f Ah", ieee_float_(lolan_get_32bit(44)));
+  //  44   4  0x41 0xcc 0x00 0x00  Total charging capacity
+  ESP_LOGI(TAG, "  Total charging capacity: %f Ah", ieee_float_(lolan_get_32bit(44)));
 
   //  48   4  0x40 0x30 0x00 0x00  mCell_voltage_discharge
   ESP_LOGI(TAG, "  mCell_voltage_discharge: %f V", ieee_float_(lolan_get_32bit(48)));
@@ -435,6 +435,8 @@ void LolanBmsBle::dump_config() {  // NOLINT(google-readability-function-size,re
   LOG_SENSOR("", "Cell Voltage 14", this->cells_[13].cell_voltage_sensor_);
   LOG_SENSOR("", "Cell Voltage 15", this->cells_[14].cell_voltage_sensor_);
   LOG_SENSOR("", "Cell Voltage 16", this->cells_[15].cell_voltage_sensor_);
+  LOG_SENSOR("", "Total charged capacity", this->total_charged_capacity_sensor_);
+  LOG_SENSOR("", "Total discharged capacity", this->total_discharged_capacity_sensor_);
 
   LOG_TEXT_SENSOR("", "Errors", this->errors_text_sensor_);
 }
