@@ -339,67 +339,67 @@ void LolanBmsBle::decode_settings_data_(const std::vector<uint8_t> &data) {
   ESP_LOGI(TAG, "  Cycle count: %d", lolan_get_16bit(18));
 
   //  20   4  0x42 0x51 0x09 0x41  Battery capacity
-  ESP_LOGI(TAG, "  Battery capacity: %f", ieee_float_(lolan_get_32bit(20)));
+  ESP_LOGI(TAG, "  Battery capacity: %.3f", ieee_float_(lolan_get_32bit(20)));
 
   //  24   4  0x40 0x56 0x66 0x66  Start balancing voltage
-  ESP_LOGI(TAG, "  Start balancing voltage: %f", ieee_float_(lolan_get_32bit(24)));
+  ESP_LOGI(TAG, "  Start balancing voltage: %.3f", ieee_float_(lolan_get_32bit(24)));
 
   //  28   4  0x3f 0x80 0x00 0x00
   ESP_LOGI(TAG, "  Unknown28: %f", ieee_float_(lolan_get_32bit(28)));
 
   //  32   4  0x40 0xb7 0x95 0x81  Reference discharging voltage
-  ESP_LOGI(TAG, "  Reference discharging voltage: %f V", ieee_float_(lolan_get_32bit(32)));
+  ESP_LOGI(TAG, "  Reference discharging voltage: %.3f V", ieee_float_(lolan_get_32bit(32)));
 
   //  36   4  0x40 0xb2 0xb8 0x52  Reference charging voltage
-  ESP_LOGI(TAG, "  Reference charging voltage: %f V", ieee_float_(lolan_get_32bit(36)));
+  ESP_LOGI(TAG, "  Reference charging voltage: %.3f V", ieee_float_(lolan_get_32bit(36)));
 
   //  40   4  0x41 0x9a 0x00 0x00  Total discharging capacity
-  ESP_LOGI(TAG, "  Total discharging capacity: %f Ah", ieee_float_(lolan_get_32bit(40)));
+  ESP_LOGI(TAG, "  Total discharging capacity: %.3f Ah", ieee_float_(lolan_get_32bit(40)));
 
   //  44   4  0x41 0xcc 0x00 0x00  Total charging capacity
-  ESP_LOGI(TAG, "  Total charging capacity: %f Ah", ieee_float_(lolan_get_32bit(44)));
+  ESP_LOGI(TAG, "  Total charging capacity: %.3f Ah", ieee_float_(lolan_get_32bit(44)));
 
-  //  48   4  0x40 0x30 0x00 0x00  mCell_voltage_discharge
-  ESP_LOGI(TAG, "  mCell_voltage_discharge: %f V", ieee_float_(lolan_get_32bit(48)));
+  //  48   4  0x40 0x30 0x00 0x00  Cell voltage discharge
+  ESP_LOGI(TAG, "  Cell voltage discharge: %.3f V", ieee_float_(lolan_get_32bit(48)));
 
-  //  52   4  0x40 0x69 0x99 0x9a  mCell_voltage_overcharge
-  ESP_LOGI(TAG, "  mCell_voltage_overcharge: %f V", ieee_float_(lolan_get_32bit(52)));
+  //  52   4  0x40 0x69 0x99 0x9a  Cell voltage overcharge
+  ESP_LOGI(TAG, "  Cell voltage overcharge: %.3f V", ieee_float_(lolan_get_32bit(52)));
 
-  //  56   4  0x42 0x82 0x00 0x00  mMOS_Temperature_Protect
-  ESP_LOGI(TAG, "  mMOS_Temperature_Protect: %f °C", ieee_float_(lolan_get_32bit(56)));
+  //  56   4  0x42 0x82 0x00 0x00  MOS temperature protect
+  ESP_LOGI(TAG, "  Mosfet temperature protection: %.3f °C", ieee_float_(lolan_get_32bit(56)));
 
-  //  60   4  0x42 0x82 0x00 0x00  mCircuit_Temperature_Protect
-  ESP_LOGI(TAG, "  mCircuit_Temperature_Protect: %f °C", ieee_float_(lolan_get_32bit(60)));
+  //  60   4  0x42 0x82 0x00 0x00  Circuit temperature protect
+  ESP_LOGI(TAG, "  Circuit temperature protection: %.3f °C", ieee_float_(lolan_get_32bit(60)));
 
-  //  64   4  0x46 0x1c 0x40 0x00  mTemperature_Adjustment
-  ESP_LOGI(TAG, "  mTemperature_Adjustment: %f", ieee_float_(lolan_get_32bit(64)));
+  //  64   4  0x46 0x1c 0x40 0x00  Temperature adjustment
+  ESP_LOGI(TAG, "  Temperature adjustment: %.3f", ieee_float_(lolan_get_32bit(64)));
 
-  //  68   4  0xcc 0x10 0xf1 0x52  serial_number (uint32)
-  ESP_LOGI(TAG, "  serial_number: %d", lolan_get_32bit(68));
+  //  68   4  0xcc 0x10 0xf1 0x52  Serial number (uint32)
+  ESP_LOGI(TAG, "  Serial number: %u", lolan_get_32bit(68));
 
-  //  72   4  0x01 0x34 0x8b 0x9a  softDate (uint32)
-  ESP_LOGI(TAG, "  softDate: %d", lolan_get_32bit(72));
+  //  72   4  0x01 0x34 0x8b 0x9a  Software date (uint32)
+  ESP_LOGI(TAG, "  Software date: %u", lolan_get_32bit(72));
 
-  //  76   4  0x40 0x30 0x00 0x00  lowpower
-  ESP_LOGI(TAG, "  lowpower: %f", ieee_float_(lolan_get_32bit(76)));
+  //  76   4  0x40 0x30 0x00 0x00  Lowpower
+  ESP_LOGI(TAG, "  Lowpower: %.3f V", ieee_float_(lolan_get_32bit(76)));
 
-  //  80   4  0x40 0x53 0x33 0x33  mBattery4_Adjustment
-  ESP_LOGI(TAG, "  mBattery4_Adjustment: %f", ieee_float_(lolan_get_32bit(80)));
+  //  80   4  0x40 0x53 0x33 0x33  Battery4 Adjustment
+  ESP_LOGI(TAG, "  Battery4 adjustment: %.3f", ieee_float_(lolan_get_32bit(80)));
 
-  //  84   4  0x3c 0x23 0xd7 0x0a  mVoltage_Equal
-  ESP_LOGI(TAG, "  mVoltage_Equal: %f V", ieee_float_(lolan_get_32bit(84)));
+  //  84   4  0x3c 0x23 0xd7 0x0a  Voltage Equal
+  ESP_LOGI(TAG, "  Voltage Equal: %.3f V", ieee_float_(lolan_get_32bit(84)));
 
-  //  88   4  0x41 0xc0 0xcc 0xcd  mOvercharge_Release_Voltage
-  ESP_LOGI(TAG, "  mOvercharge_Release_Voltage: %f V", ieee_float_(lolan_get_32bit(88)));
+  //  88   4  0x41 0xc0 0xcc 0xcd  Overcharge release voltage
+  ESP_LOGI(TAG, "  Overcharge release voltage: %.3f V", ieee_float_(lolan_get_32bit(88)));
 
-  //  92   4  0x40 0x5c 0xcc 0xcd  mOvercharge_Cell_voltage
-  ESP_LOGI(TAG, "  mOvercharge_Cell_voltage: %f V", ieee_float_(lolan_get_32bit(92)));
+  //  92   4  0x40 0x5c 0xcc 0xcd  Overcharge cell voltage
+  ESP_LOGI(TAG, "  Overcharge cell voltage: %.3f V", ieee_float_(lolan_get_32bit(92)));
 
-  //  96   4  0x41 0xa2 0x66 0x66  mDischarge_Release_Voltage
-  ESP_LOGI(TAG, "  mDischarge_Release_Voltage: %f V", ieee_float_(lolan_get_32bit(96)));
+  //  96   4  0x41 0xa2 0x66 0x66  Discharge release voltage
+  ESP_LOGI(TAG, "  Discharge release voltage: %.3f V", ieee_float_(lolan_get_32bit(96)));
 
-  // 100   4  0x40 0x39 0x99 0x9a  mDischarge_Cell_Voltage
-  ESP_LOGI(TAG, "  mDischarge_Cell_Voltage: %f V", ieee_float_(lolan_get_32bit(100)));
+  // 100   4  0x40 0x39 0x99 0x9a  Discharge cell voltage
+  ESP_LOGI(TAG, "  Discharge cell voltage: %.3f V", ieee_float_(lolan_get_32bit(100)));
 
   // 104   2  0x35 0xe2            CRC?
   // 106   2  0x5a 0xa5
