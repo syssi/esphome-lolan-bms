@@ -140,6 +140,11 @@ void LolanBmsBle::decode_status_data_(const std::vector<uint8_t> &data) {
   ESP_LOGI(TAG, "Status frame received");
   ESP_LOGD(TAG, "  %s", format_hex_pretty(&data.front(), data.size()).c_str());
 
+  if (data.size() < 40) {
+    ESP_LOGW(TAG, "Invalid status frame length: %d", data.size());
+    return;
+  }
+
   // Byte Len Payload              Description                      Unit  Precision
   //  0    1  0x01                   Frame type
   //  1    1  0x00
@@ -202,6 +207,11 @@ void LolanBmsBle::decode_cell_info_data_(const std::vector<uint8_t> &data) {
 
   ESP_LOGI(TAG, "Cell info frame received");
   ESP_LOGD(TAG, "  %s", format_hex_pretty(&data.front(), data.size()).c_str());
+
+  if (data.size() < 40) {
+    ESP_LOGW(TAG, "Invalid cell info frame length: %d", data.size());
+    return;
+  }
 
   // Byte Len Payload              Description                      Unit  Precision
   //  0    1  0x02                 Frame type
@@ -277,6 +287,11 @@ void LolanBmsBle::decode_settings_data_(const std::vector<uint8_t> &data) {
 
   ESP_LOGI(TAG, "Settings frame received");
   ESP_LOGD(TAG, "  %s", format_hex_pretty(&data.front(), data.size()).c_str());
+
+  if (data.size() < 108) {
+    ESP_LOGW(TAG, "Invalid settings frame length: %d", data.size());
+    return;
+  }
 
   // Byte Len Payload              Description                      Unit  Precision
   //   0   1  0x03  Frame type                uint8
