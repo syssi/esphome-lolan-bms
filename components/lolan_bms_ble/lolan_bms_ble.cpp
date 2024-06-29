@@ -423,7 +423,7 @@ void LolanBmsBle::decode_confirmations_(const std::vector<uint8_t> &data) {
     return;
   }
 
-  switch(lolan_get_32bit(0)) {
+  switch (lolan_get_32bit(0)) {
     case 0x211d1ae3:
       ESP_LOGE(TAG, "Invalid password");
       break;
