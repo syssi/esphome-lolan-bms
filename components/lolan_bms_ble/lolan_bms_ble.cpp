@@ -255,26 +255,33 @@ void LolanBmsBle::decode_cell_info_data_(const std::vector<uint8_t> &data) {
   //  76   4  0x00 0x00 0x00 0x00  Cell voltage 14
   //  80   4  0x00 0x00 0x00 0x00  Cell voltage 15
   //  84   4  0x00 0x00 0x00 0x00  Cell voltage 16
-  this->min_cell_voltage_ = 100.0f;
-  this->max_cell_voltage_ = -100.0f;
-  for (uint8_t i = 0; i < std::min(MAX_KNOWN_CELL_COUNT, cell_count); i++) {
+  float min_cell_voltage = 100.0f;
+  float max_cell_voltage = -100.0f;
+  float average_cell_voltage = 0.0f;
+  uint8_t min_voltage_cell = 0;
+  uint8_t max_voltage_cell = 0;
+  uint8_t cells = std::min(MAX_KNOWN_CELL_COUNT, cell_count);
+  for (uint8_t i = 0; i < cells; i++) {
     float cell_voltage = ieee_float_(lolan_get_32bit((i * 4) + 24));
-    if (cell_voltage > 0 && cell_voltage < this->min_cell_voltage_) {
-      this->min_cell_voltage_ = cell_voltage;
-      this->min_voltage_cell_ = i + 1;
+    average_cell_voltage = average_cell_voltage + cell_voltage;
+    if (cell_voltage > 0 && cell_voltage < min_cell_voltage) {
+      min_cell_voltage = cell_voltage;
+      min_voltage_cell = i + 1;
     }
-    if (cell_voltage > this->max_cell_voltage_) {
-      this->max_cell_voltage_ = cell_voltage;
-      this->max_voltage_cell_ = i + 1;
+    if (cell_voltage > max_cell_voltage) {
+      max_cell_voltage = cell_voltage;
+      max_voltage_cell = i + 1;
     }
     this->publish_state_(this->cells_[i].cell_voltage_sensor_, cell_voltage);
   }
+  average_cell_voltage = average_cell_voltage / cells;
 
-  this->publish_state_(this->min_cell_voltage_sensor_, this->min_cell_voltage_);
-  this->publish_state_(this->max_cell_voltage_sensor_, this->max_cell_voltage_);
-  this->publish_state_(this->max_voltage_cell_sensor_, (float) this->max_voltage_cell_);
-  this->publish_state_(this->min_voltage_cell_sensor_, (float) this->min_voltage_cell_);
-  this->publish_state_(this->delta_cell_voltage_sensor_, this->max_cell_voltage_ - this->min_cell_voltage_);
+  this->publish_state_(this->min_cell_voltage_sensor_, min_cell_voltage);
+  this->publish_state_(this->max_cell_voltage_sensor_, max_cell_voltage);
+  this->publish_state_(this->max_voltage_cell_sensor_, (float) max_voltage_cell);
+  this->publish_state_(this->min_voltage_cell_sensor_, (float) min_voltage_cell);
+  this->publish_state_(this->delta_cell_voltage_sensor_, max_cell_voltage - min_cell_voltage);
+  this->publish_state_(this->average_cell_voltage_sensor_, average_cell_voltage);
 }
 
 void LolanBmsBle::decode_settings_data_(const std::vector<uint8_t> &data) {
