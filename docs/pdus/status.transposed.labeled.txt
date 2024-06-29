@@ -22,14 +22,14 @@
     21	cd cd cd cd  Temperature 2
     22	0b 10 10 16  Temperature 2
     23	30 e0 e0 80  Temperature 2
-    24	42 42 42 42  Total discharging energy          float32
-    25	9d 9d 9d 9d  Total discharging energy
-    26	93 93 93 93  Total discharging energy
-    27	20 20 20 20  Total discharging energy
-    28	42 42 42 42  Total charging energy             float32
-    29	47 47 47 47  Total charging energy
-    30	53 53 53 53  Total charging energy
-    31	ec ec ec ec  Total charging energy
+    24	42 42 42 42  Total discharging capacity          float32
+    25	9d 9d 9d 9d  Total discharging capacity
+    26	93 93 93 93  Total discharging capacity
+    27	20 20 20 20  Total discharging capacity
+    28	42 42 42 42  Total charging capacity             float32
+    29	47 47 47 47  Total charging capacity
+    30	53 53 53 53  Total charging capacity
+    31	ec ec ec ec  Total charging capacity
     32	00 00 00 00  Total runtime                      uint32
     33	34 34 34 34  Total runtime
     34	3f 3f 3f 3f  Total runtime

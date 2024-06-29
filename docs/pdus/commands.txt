@@ -11,8 +11,8 @@ D9:D9 + Password  Charging switch off
 86:86 + Password  Discharging switch off
 
 AA:AA + Password  Clear charging cycles
-CA:CA + Password  Clear Total discharging energy
-CB:CB + Password  Clear Total charging energy
+CA:CA + Password  Clear Total discharging capacity
+CB:CB + Password  Clear Total charging capacity
 
 B9:B9 + Password + 4 bytes float calibration value     Discharging calibration
 DE:DE + Password + 4 bytes float calibration value     Charging calibration
@@ -25,8 +25,8 @@ DE:DE + Password + 4 bytes float calibration value     Charging calibration
 86 00 00 BC 61 4E                          Discharging switch off
 D8 88 00 BC 61 4E                          Charging switch on
 D9 00 00 BC 61 4E                          Charging switch off
-CB 00 00 BC 61 4E                          Clear Total charging energy
-CA 00 00 BC 61 4E                          Clear Total discharging energy
+CB 00 00 BC 61 4E                          Clear Total charging capacity
+CA 00 00 BC 61 4E                          Clear Total discharging capacity
 56 00 00 BC 61 4E                          Retrieve settings
 C5 65 00 BC 61 4E                          Request status
 5B 65 00 BC 61 4E                          Request cell info

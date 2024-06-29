@@ -12,21 +12,21 @@ CODEOWNERS = ["@syssi"]
 CONF_RETRIEVE_SETTINGS = "retrieve_settings"
 # CONF_FACTORY_RESET = "factory_reset"
 CONF_RESET_CHARGING_CYCLES = "reset_charging_cycles"
-CONF_RESET_TOTAL_CHARGING_ENERGY = "reset_total_charging_energy"
-CONF_RESET_TOTAL_DISCHARGING_ENERGY = "reset_total_discharging_energy"
+CONF_RESET_TOTAL_CHARGED_CAPACITY = "reset_total_charged_capacity"
+CONF_RESET_TOTAL_DISCHARGED_CAPACITY = "reset_total_discharged_capacity"
 
 ICON_RETRIEVE_SETTINGS = "mdi:cog"
 ICON_FACTORY_RESET = "mdi:factory"
 ICON_RESET_CHARGING_CYCLES = "mdi:counter"
-ICON_RESET_TOTAL_CHARGING_ENERGY = "mdi:counter"
-ICON_RESET_TOTAL_DISCHARGING_ENERGY = "mdi:counter"
+ICON_RESET_TOTAL_CHARGED_CAPACITY = "mdi:counter"
+ICON_RESET_TOTAL_DISCHARGED_CAPACITY = "mdi:counter"
 
 BUTTONS = {
     CONF_RETRIEVE_SETTINGS: 0x5600,
     CONF_FACTORY_RESET: 0xCCCC,
     CONF_RESET_CHARGING_CYCLES: 0xAA55,
-    CONF_RESET_TOTAL_CHARGING_ENERGY: 0xCB00,
-    CONF_RESET_TOTAL_DISCHARGING_ENERGY: 0xCA00,
+    CONF_RESET_TOTAL_CHARGED_CAPACITY: 0xCB00,
+    CONF_RESET_TOTAL_DISCHARGED_CAPACITY: 0xCA00,
 }
 
 LolanButton = lolan_bms_ble_ns.class_("LolanButton", button.Button, cg.Component)
@@ -51,19 +51,19 @@ CONFIG_SCHEMA = LOLAN_BMS_BLE_COMPONENT_SCHEMA.extend(
                 cv.Optional(CONF_ICON, default=ICON_RESET_CHARGING_CYCLES): cv.icon,
             }
         ).extend(cv.COMPONENT_SCHEMA),
-        cv.Optional(CONF_RESET_TOTAL_CHARGING_ENERGY): button.BUTTON_SCHEMA.extend(
+        cv.Optional(CONF_RESET_TOTAL_CHARGED_CAPACITY): button.BUTTON_SCHEMA.extend(
             {
                 cv.GenerateID(): cv.declare_id(LolanButton),
                 cv.Optional(
-                    CONF_ICON, default=ICON_RESET_TOTAL_CHARGING_ENERGY
+                    CONF_ICON, default=ICON_RESET_TOTAL_CHARGED_CAPACITY
                 ): cv.icon,
             }
         ).extend(cv.COMPONENT_SCHEMA),
-        cv.Optional(CONF_RESET_TOTAL_DISCHARGING_ENERGY): button.BUTTON_SCHEMA.extend(
+        cv.Optional(CONF_RESET_TOTAL_DISCHARGED_CAPACITY): button.BUTTON_SCHEMA.extend(
             {
                 cv.GenerateID(): cv.declare_id(LolanButton),
                 cv.Optional(
-                    CONF_ICON, default=ICON_RESET_TOTAL_DISCHARGING_ENERGY
+                    CONF_ICON, default=ICON_RESET_TOTAL_DISCHARGED_CAPACITY
                 ): cv.icon,
             }
         ).extend(cv.COMPONENT_SCHEMA),
