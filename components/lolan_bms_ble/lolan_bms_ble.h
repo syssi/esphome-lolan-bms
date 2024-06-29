@@ -97,6 +97,7 @@ class LolanBmsBle : public esphome::ble_client::BLEClientNode, public PollingCom
   void on_lolan_bms_ble_data(const uint8_t &handle, const std::vector<uint8_t> &data);
   bool send_command(uint16_t function);
   bool send_factory_reset();
+  void set_password(uint32_t password) { this->password_ = password; }
 
  protected:
   binary_sensor::BinarySensor *charging_binary_sensor_;
@@ -135,11 +136,9 @@ class LolanBmsBle : public esphome::ble_client::BLEClientNode, public PollingCom
     sensor::Sensor *temperature_sensor_{nullptr};
   } temperatures_[2];
 
-  std::vector<uint8_t> frame_buffer_;
   uint16_t char_notify_handle_;
-  uint16_t char_notify2_handle_;
   uint16_t char_command_handle_;
-  uint8_t next_command_{5};
+  uint32_t password_ = 12345678;
 
   void decode_settings_data_(const std::vector<uint8_t> &data);
   void decode_status_data_(const std::vector<uint8_t> &data);

@@ -482,10 +482,10 @@ bool LolanBmsBle::send_command(uint16_t function) {
 
   frame[0] = function >> 8;  // function
   frame[1] = function >> 0;  // function
-  frame[2] = 0x00;           // password
-  frame[3] = 0xbc;           // password
-  frame[4] = 0x61;           // password
-  frame[5] = 0x4e;           // password
+  frame[2] = this->password_ >> 24;
+  frame[3] = this->password_ >> 16;
+  frame[4] = this->password_ >> 8;
+  frame[5] = this->password_ >> 0;
 
   ESP_LOGD(TAG, "Send command (handle 0x%02X): %s", this->char_command_handle_,
            format_hex_pretty(frame, sizeof(frame)).c_str());
