@@ -141,11 +141,6 @@ class LolanBmsBle : public esphome::ble_client::BLEClientNode, public PollingCom
   uint16_t char_command_handle_;
   uint8_t next_command_{5};
 
-  float min_cell_voltage_{100.0f};
-  float max_cell_voltage_{-100.0f};
-  uint8_t max_voltage_cell_{0};
-  uint8_t min_voltage_cell_{0};
-
   void decode_settings_data_(const std::vector<uint8_t> &data);
   void decode_status_data_(const std::vector<uint8_t> &data);
   void decode_cell_info_data_(const std::vector<uint8_t> &data);
