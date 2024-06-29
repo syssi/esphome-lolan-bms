@@ -33,11 +33,9 @@ CONF_TOTAL_VOLTAGE = "total_voltage"
 # CONF_POWER = "power"
 CONF_CHARGING_POWER = "charging_power"
 CONF_DISCHARGING_POWER = "discharging_power"
-CONF_CAPACITY_REMAINING = "capacity_remaining"
 
 CONF_ERROR_BITMASK = "error_bitmask"
 CONF_STATE_OF_CHARGE = "state_of_charge"
-CONF_NOMINAL_CAPACITY = "nominal_capacity"
 CONF_CHARGING_CYCLES = "charging_cycles"
 CONF_MIN_CELL_VOLTAGE = "min_cell_voltage"
 CONF_MAX_CELL_VOLTAGE = "max_cell_voltage"
@@ -69,8 +67,6 @@ CONF_TEMPERATURE_1 = "temperature_1"
 CONF_TEMPERATURE_2 = "temperature_2"
 
 ICON_CURRENT_DC = "mdi:current-dc"
-ICON_CAPACITY_REMAINING = "mdi:battery-50"
-ICON_NOMINAL_CAPACITY = "mdi:battery-50"
 ICON_CHARGING_CYCLES = "mdi:battery-sync"
 ICON_MIN_CELL_VOLTAGE = "mdi:battery-minus-outline"
 ICON_MAX_CELL_VOLTAGE = "mdi:battery-plus-outline"
@@ -111,10 +107,8 @@ SENSORS = [
     CONF_POWER,
     CONF_CHARGING_POWER,
     CONF_DISCHARGING_POWER,
-    CONF_CAPACITY_REMAINING,
     CONF_ERROR_BITMASK,
     CONF_STATE_OF_CHARGE,
-    CONF_NOMINAL_CAPACITY,
     CONF_CHARGING_CYCLES,
     CONF_MIN_CELL_VOLTAGE,
     CONF_MAX_CELL_VOLTAGE,
@@ -165,13 +159,6 @@ CONFIG_SCHEMA = cv.Schema(
             device_class=DEVICE_CLASS_POWER,
             state_class=STATE_CLASS_MEASUREMENT,
         ),
-        cv.Optional(CONF_CAPACITY_REMAINING): sensor.sensor_schema(
-            unit_of_measurement=UNIT_AMPERE_HOURS,
-            icon=ICON_CAPACITY_REMAINING,
-            accuracy_decimals=3,
-            device_class=DEVICE_CLASS_EMPTY,
-            state_class=STATE_CLASS_MEASUREMENT,
-        ),
         cv.Optional(CONF_ERROR_BITMASK): sensor.sensor_schema(
             unit_of_measurement=UNIT_EMPTY,
             icon=ICON_ERROR_BITMASK,
@@ -183,13 +170,6 @@ CONFIG_SCHEMA = cv.Schema(
             unit_of_measurement=UNIT_PERCENT,
             accuracy_decimals=0,
             device_class=DEVICE_CLASS_BATTERY,
-            state_class=STATE_CLASS_MEASUREMENT,
-        ),
-        cv.Optional(CONF_NOMINAL_CAPACITY): sensor.sensor_schema(
-            unit_of_measurement=UNIT_AMPERE_HOURS,
-            icon=ICON_NOMINAL_CAPACITY,
-            accuracy_decimals=3,
-            device_class=DEVICE_CLASS_EMPTY,
             state_class=STATE_CLASS_MEASUREMENT,
         ),
         cv.Optional(CONF_CHARGING_CYCLES): sensor.sensor_schema(
