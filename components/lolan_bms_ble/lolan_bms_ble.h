@@ -193,8 +193,9 @@ class LolanBmsBle : public esphome::ble_client::BLEClientNode, public PollingCom
 
   uint16_t crc16(const uint8_t *data, size_t len) {
     uint16_t crc = 16;
+    size_t i;
 
-    for (size_t i = 0; i < len; ++i) {
+    for (i = 0; i < len; ++i) {
       crc = (crc << 8) ^ crcTable[((crc >> 7) ^ data[i]) & 0xFF];
     }
 
