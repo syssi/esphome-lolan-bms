@@ -46,23 +46,23 @@
     45	cc  Pack overvoltage protection
     46	00  Pack overvoltage protection
     47	00  Pack overvoltage protection
-    48	40  Cell undervoltage protection        float32
+    48	40  Cell undervoltage protection       float32
     49	30  Cell undervoltage protection
     50	00  Cell undervoltage protection
     51	00  Cell undervoltage protection
-    52	40  Cell overvoltage protection       float32
+    52	40  Cell overvoltage protection        float32
     53	69  Cell overvoltage protection
     54	99  Cell overvoltage protection
     55	9a  Cell overvoltage protection
-    56	42  mMOS_Temperature_Protect
-    57	82  mMOS_Temperature_Protect
-    58	00  mMOS_Temperature_Protect
-    59	00  mMOS_Temperature_Protect
-    60	42  mCircuit_Temperature_Protect
+    56	42  Mosfet overtemperature protection  float32
+    57	82  Mosfet overtemperature protection
+    58	00  Mosfet overtemperature protection
+    59	00  Mosfet overtemperature protection
+    60	42  mCircuit_Temperature_Protect       float32
     61	82  mCircuit_Temperature_Protect
     62	00  mCircuit_Temperature_Protect
     63	00  mCircuit_Temperature_Protect
-    64	46  mTemperature_Adjustment
+    64	46  mTemperature_Adjustment            float32
     65	1c  mTemperature_Adjustment
     66	40  mTemperature_Adjustment
     67	00  mTemperature_Adjustment
@@ -82,27 +82,27 @@
     81	53  mBattery4_Adjustment
     82	33  mBattery4_Adjustment
     83	33  mBattery4_Adjustment
-    84	3c  mVoltage_Equal
+    84	3c  mVoltage_Equal                 float32
     85	23  mVoltage_Equal
     86	d7  mVoltage_Equal
     87	0a  mVoltage_Equal
-    88	41  mOvercharge_Release_Voltage
+    88	41  mOvercharge_Release_Voltage    float32
     89	c0  mOvercharge_Release_Voltage
     90	cc  mOvercharge_Release_Voltage
     91	cd  mOvercharge_Release_Voltage
-    92	40  mOvercharge_Cell_voltage
+    92	40  mOvercharge_Cell_voltage       float32
     93	5c  mOvercharge_Cell_voltage
     94	cc  mOvercharge_Cell_voltage
     95	cd  mOvercharge_Cell_voltage
-    96	41  mDischarge_Release_Voltage
+    96	41  mDischarge_Release_Voltage     float32
     97	a2  mDischarge_Release_Voltage
     98	66  mDischarge_Release_Voltage
     99	66  mDischarge_Release_Voltage
-   100	40  mDischarge_Cell_Voltage
+   100	40  mDischarge_Cell_Voltage        float32
    101	39  mDischarge_Cell_Voltage
    102	99  mDischarge_Cell_Voltage
    103	9a  mDischarge_Cell_Voltage
-   104	35  CRC?
-   105	e2  CRC?
-   106	5a
-   107	a5
+   104	35  CRC
+   105	e2  CRC
+   106	5a  End of frame
+   107	a5  End of frame

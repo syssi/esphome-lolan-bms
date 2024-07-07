@@ -365,8 +365,8 @@ void LolanBmsBle::decode_settings_data_(const std::vector<uint8_t> &data) {
   //  52   4  0x40 0x69 0x99 0x9a  Cell overvoltage protection
   ESP_LOGI(TAG, "  Cell overvoltage protection: %.3f V", ieee_float_(lolan_get_32bit(52)));
 
-  //  56   4  0x42 0x82 0x00 0x00  MOS temperature protect
-  ESP_LOGI(TAG, "  Mosfet temperature protection: %.3f °C", ieee_float_(lolan_get_32bit(56)));
+  //  56   4  0x42 0x82 0x00 0x00  Mosfet overtemperature protection
+  ESP_LOGI(TAG, "  Mosfet overtemperature protection: %.3f °C", ieee_float_(lolan_get_32bit(56)));
 
   //  60   4  0x42 0x82 0x00 0x00  Circuit temperature protect
   ESP_LOGI(TAG, "  Circuit temperature protection: %.3f °C", ieee_float_(lolan_get_32bit(60)));
