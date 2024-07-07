@@ -26,7 +26,7 @@
     25	56  Start balancing voltage
     26	66  Start balancing voltage
     27	66  Start balancing voltage
-    28	3f  
+    28	3f
     29	80
     30	00
     31	00
@@ -46,14 +46,14 @@
     45	cc  Pack overvoltage protection
     46	00  Pack overvoltage protection
     47	00  Pack overvoltage protection
-    48	40  mCell_voltage_discharge        float32
-    49	30  mCell_voltage_discharge
-    50	00  mCell_voltage_discharge
-    51	00  mCell_voltage_discharge
-    52	40  mCell_voltage_overcharge       float32
-    53	69  mCell_voltage_overcharge
-    54	99  mCell_voltage_overcharge
-    55	9a  mCell_voltage_overcharge
+    48	40  Cell undervoltage protection        float32
+    49	30  Cell undervoltage protection
+    50	00  Cell undervoltage protection
+    51	00  Cell undervoltage protection
+    52	40  Cell overvoltage protection       float32
+    53	69  Cell overvoltage protection
+    54	99  Cell overvoltage protection
+    55	9a  Cell overvoltage protection
     56	42  mMOS_Temperature_Protect
     57	82  mMOS_Temperature_Protect
     58	00  mMOS_Temperature_Protect

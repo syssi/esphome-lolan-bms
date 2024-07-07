@@ -46,14 +46,14 @@
     45	cc  Pack overvoltage protection
     46	00  Pack overvoltage protection
     47	00  Pack overvoltage protection
-    48	40  mCell_voltage_discharge        float32 [2.3...4.2]
-    49	30  mCell_voltage_discharge
-    50	00  mCell_voltage_discharge
-    51	00  mCell_voltage_discharge
-    52	40  mCell_voltage_overcharge       float32 [3...4.35]
-    53	69  mCell_voltage_overcharge
-    54	99  mCell_voltage_overcharge
-    55	9a  mCell_voltage_overcharge
+    48	40  Cell undervoltage protection        float32 [2.3...4.2]
+    49	30  Cell undervoltage protection
+    50	00  Cell undervoltage protection
+    51	00  Cell undervoltage protection
+    52	40  Cell overvoltage protection       float32 [3...4.35]
+    53	69  Cell overvoltage protection
+    54	99  Cell overvoltage protection
+    55	9a  Cell overvoltage protection
     56	42  mMOS_Temperature_Protect       float32 [30...90]
     57	82  mMOS_Temperature_Protect
     58	00  mMOS_Temperature_Protect
@@ -90,7 +90,7 @@
     89	c0  mOvercharge_Release_Voltage
     90	cc  mOvercharge_Release_Voltage
     91	cd  mOvercharge_Release_Voltage
-    92	40  mOvercharge_Cell_voltage       float32 [2.8...mCell_voltage_overcharge]
+    92	40  mOvercharge_Cell_voltage       float32 [2.8...Cell overvoltage protection]
     93	5c  mOvercharge_Cell_voltage
     94	cc  mOvercharge_Cell_voltage
     95	cd  mOvercharge_Cell_voltage
@@ -98,7 +98,7 @@
     97	a2  mDischarge_Release_Voltage
     98	66  mDischarge_Release_Voltage
     99	66  mDischarge_Release_Voltage
-   100	40  mDischarge_Cell_Voltage        float32 [mCell_voltage_discharge...3.8]
+   100	40  mDischarge_Cell_Voltage        float32 [Cell undervoltage protection...3.8]
    101	39  mDischarge_Cell_Voltage
    102	99  mDischarge_Cell_Voltage
    103	9a  mDischarge_Cell_Voltage
