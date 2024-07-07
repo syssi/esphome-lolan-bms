@@ -1,35 +1,35 @@
-     0	03  Frame type                uint8
-     1	6c
+     0	6a  Frame type                uint8
+     1	6a
      2	00  BLE password              uint32
      3	bc  BLE password
      4	61  BLE password
      5	4e  BLE password
      6	0c  Output voltage offset     uint8
      7	00  Input voltage offset      uint8
-     8	00  Max charging current      uint16
-     9	32  Max charging current 
-    10	00  Max discharging current   uint16
+     8	00  Max charging current      uint16 [0...250]
+     9	32  Max charging current
+    10	00  Max discharging current   uint16 [0...800]
     11	50  Max discharging current
     12	08  Charging current zero     uint8
     13	0f  Discharging current zero  uint8
-    14	07  Cell count                uint8
-    15	01  Battery type              uint8
-    16	ff  mNC2?                     uint16
-    17	fa  mNC2?
+    14	07  Cell count                uint8  [1...24]
+    15	01  Battery type              uint8  [1...15] (1: LiFePo4, 2: Ternary Lithium)
+    16	00  Static16, always 0x0001   uint16
+    17	01  Static16, always 0x0001
     18	00  Cycle count               uint16
     19	01  Cycle count
     20	42  Battery capacity          float32
     21	51  Battery capacity
     22	09  Battery capacity
     23	41  Battery capacity
-    24	40  Start balancing voltage   float32
+    24	40  Start balancing voltage   float32 [0...3.32]
     25	56  Start balancing voltage
     26	66  Start balancing voltage
     27	66  Start balancing voltage
-    28	3f
-    29	80
-    30	00
-    31	00
+    28	00  Static28, always 0x0001   float32
+    29	01  Static28, always 0x0001
+    30	00  Static28, always 0x0001
+    31	00  Static28, always 0x0001
     32	40  Reference discharging voltage  float32
     33	b7  Reference discharging voltage
     34	95  Reference discharging voltage
@@ -38,39 +38,39 @@
     37	b2  Referencecharging voltage
     38	b8  Referencecharging voltage
     39	52  Referencecharging voltage
-    40	41  Pack undervoltage protection   float32
+    40	41  Pack undervoltage protection    float32 [8...100]
     41	9a  Pack undervoltage protection
     42	00  Pack undervoltage protection
     43	00  Pack undervoltage protection
-    44	41  Pack overvoltage protection    float32
+    44	41  Pack overvoltage protection     float32 [8...102]
     45	cc  Pack overvoltage protection
     46	00  Pack overvoltage protection
     47	00  Pack overvoltage protection
-    48	40  Cell undervoltage protection       float32
+    48	40  Cell undervoltage protection        float32 [2.3...4.2]
     49	30  Cell undervoltage protection
     50	00  Cell undervoltage protection
     51	00  Cell undervoltage protection
-    52	40  Cell overvoltage protection        float32
+    52	40  Cell overvoltage protection       float32 [3...4.35]
     53	69  Cell overvoltage protection
     54	99  Cell overvoltage protection
     55	9a  Cell overvoltage protection
-    56	42  Mosfet overtemperature protection  float32
-    57	82  Mosfet overtemperature protection
-    58	00  Mosfet overtemperature protection
-    59	00  Mosfet overtemperature protection
-    60	42  mCircuit_Temperature_Protect       float32
+    56	42  mMOS_Temperature_Protect       float32 [30...90]
+    57	82  mMOS_Temperature_Protect
+    58	00  mMOS_Temperature_Protect
+    59	00  mMOS_Temperature_Protect
+    60	42  mCircuit_Temperature_Protect   float32
     61	82  mCircuit_Temperature_Protect
     62	00  mCircuit_Temperature_Protect
     63	00  mCircuit_Temperature_Protect
-    64	46  mTemperature_Adjustment            float32
+    64	46  mTemperature_Adjustment        float32
     65	1c  mTemperature_Adjustment
     66	40  mTemperature_Adjustment
     67	00  mTemperature_Adjustment
-    68	cc  serial_number                  uint32
+    68	cc  serial_number                  uint32/float32?
     69	10  serial_number
     70	f1  serial_number
     71	52  serial_number
-    72	01  softDate                       uint32
+    72	01  softDate                       uint32/float32?
     73	34  softDate
     74	8b  softDate
     75	9a  softDate
@@ -82,27 +82,27 @@
     81	53  mBattery4_Adjustment
     82	33  mBattery4_Adjustment
     83	33  mBattery4_Adjustment
-    84	3c  mVoltage_Equal                 float32
+    84	3c  mVoltage_Equal                 float32 [0.01...0.35]
     85	23  mVoltage_Equal
     86	d7  mVoltage_Equal
     87	0a  mVoltage_Equal
-    88	41  mOvercharge_Release_Voltage    float32
+    88	41  mOvercharge_Release_Voltage    float32 [10...Pack overvoltage protection]
     89	c0  mOvercharge_Release_Voltage
     90	cc  mOvercharge_Release_Voltage
     91	cd  mOvercharge_Release_Voltage
-    92	40  mOvercharge_Cell_voltage       float32
+    92	40  mOvercharge_Cell_voltage       float32 [2.8...Cell overvoltage protection]
     93	5c  mOvercharge_Cell_voltage
     94	cc  mOvercharge_Cell_voltage
     95	cd  mOvercharge_Cell_voltage
-    96	41  mDischarge_Release_Voltage     float32
+    96	41  mDischarge_Release_Voltage     float32 [Pack undervoltage protection...102]
     97	a2  mDischarge_Release_Voltage
     98	66  mDischarge_Release_Voltage
     99	66  mDischarge_Release_Voltage
-   100	40  mDischarge_Cell_Voltage        float32
+   100	40  mDischarge_Cell_Voltage        float32 [Cell undervoltage protection...3.8]
    101	39  mDischarge_Cell_Voltage
    102	99  mDischarge_Cell_Voltage
    103	9a  mDischarge_Cell_Voltage
-   104	35  CRC
-   105	e2  CRC
+   104	35  CRC over 104 bytes
+   105	e2  CRC over 104 bytes
    106	5a  End of frame
    107	a5  End of frame
