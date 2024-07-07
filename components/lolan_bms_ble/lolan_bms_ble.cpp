@@ -353,11 +353,11 @@ void LolanBmsBle::decode_settings_data_(const std::vector<uint8_t> &data) {
   //  36   4  0x40 0xb2 0xb8 0x52  Reference charging voltage
   ESP_LOGI(TAG, "  Reference charging voltage: %.3f V", ieee_float_(lolan_get_32bit(36)));
 
-  //  40   4  0x41 0x9a 0x00 0x00  Total discharging capacity
-  ESP_LOGI(TAG, "  Total discharging capacity: %.3f Ah", ieee_float_(lolan_get_32bit(40)));
+  //  40   4  0x41 0x9a 0x00 0x00  Pack undervoltage protection
+  ESP_LOGI(TAG, "  Pack undervoltage protection: %.3f V", ieee_float_(lolan_get_32bit(40)));
 
-  //  44   4  0x41 0xcc 0x00 0x00  Total charging capacity
-  ESP_LOGI(TAG, "  Total charging capacity: %.3f Ah", ieee_float_(lolan_get_32bit(44)));
+  //  44   4  0x41 0xcc 0x00 0x00  Pack overvoltage protection
+  ESP_LOGI(TAG, "  Pack overvoltage protection: %.3f V", ieee_float_(lolan_get_32bit(44)));
 
   //  48   4  0x40 0x30 0x00 0x00  Cell voltage discharge
   ESP_LOGI(TAG, "  Cell voltage discharge: %.3f V", ieee_float_(lolan_get_32bit(48)));
