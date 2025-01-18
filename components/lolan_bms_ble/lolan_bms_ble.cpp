@@ -242,7 +242,7 @@ void LolanBmsBle::decode_cell_info_data_(const std::vector<uint8_t> &data) {
   //  6    1  0x00
   //  7    1  0x00
   //  8    4  0x00 0x00 0x00 0x00  Balancing mask
-  ESP_LOGI(TAG, "  Balancing mask: %d", lolan_get_32bit(8));
+  ESP_LOGI(TAG, "  Balancing mask: %lu", (unsigned long) lolan_get_32bit(8));
 
   //  12   1  0x00
   //  13   1  0x00
@@ -322,7 +322,7 @@ void LolanBmsBle::decode_settings_data_(const std::vector<uint8_t> &data) {
   ESP_LOGI(TAG, "  Unknown1: %d", data[1]);
 
   //   2   4  0x00 0xbc 0x61 0x4e  BLE password
-  ESP_LOGI(TAG, "  BLE password: %d", lolan_get_32bit(2));
+  ESP_LOGI(TAG, "  BLE password: %lu", (unsigned long) lolan_get_32bit(2));
 
   //   6   1  0x0c                 Output voltage offset
   ESP_LOGI(TAG, "  Output voltage offset: %d", data[6]);
@@ -391,10 +391,10 @@ void LolanBmsBle::decode_settings_data_(const std::vector<uint8_t> &data) {
   ESP_LOGI(TAG, "  Temperature adjustment: %.3f", ieee_float_(lolan_get_32bit(64)));
 
   //  68   4  0xcc 0x10 0xf1 0x52  Serial number (uint32)
-  ESP_LOGI(TAG, "  Serial number: %u", lolan_get_32bit(68));
+  ESP_LOGI(TAG, "  Serial number: %lu", (unsigned long) lolan_get_32bit(68));
 
   //  72   4  0x01 0x34 0x8b 0x9a  Software date (uint32)
-  ESP_LOGI(TAG, "  Software date: %u", lolan_get_32bit(72));
+  ESP_LOGI(TAG, "  Software date: %lu", (unsigned long) lolan_get_32bit(72));
 
   //  76   4  0x40 0x30 0x00 0x00  Lowpower
   ESP_LOGI(TAG, "  Lowpower: %.3f V", ieee_float_(lolan_get_32bit(76)));
