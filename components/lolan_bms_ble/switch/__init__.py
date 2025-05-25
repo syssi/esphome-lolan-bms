@@ -1,7 +1,7 @@
 import esphome.codegen as cg
 from esphome.components import switch
 import esphome.config_validation as cv
-from esphome.const import CONF_ICON, CONF_ID
+from esphome.const import CONF_ID
 
 from .. import CONF_LOLAN_BMS_BLE_ID, LOLAN_BMS_BLE_COMPONENT_SCHEMA, lolan_bms_ble_ns
 
@@ -24,17 +24,11 @@ LolanSwitch = lolan_bms_ble_ns.class_("LolanSwitch", switch.Switch, cg.Component
 
 CONFIG_SCHEMA = LOLAN_BMS_BLE_COMPONENT_SCHEMA.extend(
     {
-        cv.Optional(CONF_CHARGING): switch.SWITCH_SCHEMA.extend(
-            {
-                cv.GenerateID(): cv.declare_id(LolanSwitch),
-                cv.Optional(CONF_ICON, default=ICON_CHARGING): cv.icon,
-            }
+        cv.Optional(CONF_CHARGING): switch.switch_schema(
+            LolanSwitch, icon=ICON_CHARGING
         ).extend(cv.COMPONENT_SCHEMA),
-        cv.Optional(CONF_DISCHARGING): switch.SWITCH_SCHEMA.extend(
-            {
-                cv.GenerateID(): cv.declare_id(LolanSwitch),
-                cv.Optional(CONF_ICON, default=ICON_DISCHARGING): cv.icon,
-            }
+        cv.Optional(CONF_DISCHARGING): switch.switch_schema(
+            LolanSwitch, icon=ICON_DISCHARGING
         ).extend(cv.COMPONENT_SCHEMA),
     }
 )
