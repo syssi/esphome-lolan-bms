@@ -65,6 +65,7 @@ binary_sensor:
 
 button:
   - platform: lolan_bms_ble
+    lolan_bms_ble_id: bms0
     retrieve_settings:
       name: "${name} retrieve settings"
     factory_reset:
@@ -162,6 +163,7 @@ text_sensor:
 
 switch:
   - platform: lolan_bms_ble
+    lolan_bms_ble_id: bms0
     charging:
       name: "${name} charging"
     discharging:
