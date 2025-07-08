@@ -3,7 +3,7 @@ from esphome.components import text_sensor
 import esphome.config_validation as cv
 from esphome.const import CONF_ID, ICON_TIMELAPSE
 
-from . import CONF_LOLAN_BMS_BLE_ID, LolanBmsBle
+from . import LOLAN_BMS_BLE_COMPONENT_SCHEMA
 
 DEPENDENCIES = ["lolan_bms_ble"]
 
@@ -19,9 +19,8 @@ TEXT_SENSORS = [
     CONF_TOTAL_RUNTIME_FORMATTED,
 ]
 
-CONFIG_SCHEMA = cv.Schema(
+CONFIG_SCHEMA = LOLAN_BMS_BLE_COMPONENT_SCHEMA.extend(
     {
-        cv.GenerateID(CONF_LOLAN_BMS_BLE_ID): cv.use_id(LolanBmsBle),
         cv.Optional(CONF_ERRORS): text_sensor.text_sensor_schema(
             text_sensor.TextSensor,
             icon=ICON_ERRORS,
@@ -35,6 +34,8 @@ CONFIG_SCHEMA = cv.Schema(
 
 
 async def to_code(config):
+    from . import CONF_LOLAN_BMS_BLE_ID
+
     hub = await cg.get_variable(config[CONF_LOLAN_BMS_BLE_ID])
     for key in TEXT_SENSORS:
         if key in config:

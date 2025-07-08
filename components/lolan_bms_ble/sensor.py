@@ -7,7 +7,6 @@ from esphome.const import (
     DEVICE_CLASS_BATTERY,
     DEVICE_CLASS_CURRENT,
     DEVICE_CLASS_EMPTY,
-    DEVICE_CLASS_ENERGY,
     DEVICE_CLASS_POWER,
     DEVICE_CLASS_TEMPERATURE,
     DEVICE_CLASS_VOLTAGE,
@@ -23,7 +22,7 @@ from esphome.const import (
     UNIT_WATT,
 )
 
-from . import CONF_LOLAN_BMS_BLE_ID, LolanBmsBle
+from . import LOLAN_BMS_BLE_COMPONENT_SCHEMA
 
 DEPENDENCIES = ["lolan_bms_ble"]
 
@@ -128,9 +127,8 @@ SENSORS = [
 ]
 
 # pylint: disable=too-many-function-args
-CONFIG_SCHEMA = cv.Schema(
+CONFIG_SCHEMA = LOLAN_BMS_BLE_COMPONENT_SCHEMA.extend(
     {
-        cv.GenerateID(CONF_LOLAN_BMS_BLE_ID): cv.use_id(LolanBmsBle),
         cv.Optional(CONF_TOTAL_VOLTAGE): sensor.sensor_schema(
             unit_of_measurement=UNIT_VOLT,
             icon=ICON_EMPTY,
@@ -387,6 +385,8 @@ CONFIG_SCHEMA = cv.Schema(
 
 
 async def to_code(config):
+    from . import CONF_LOLAN_BMS_BLE_ID
+
     hub = await cg.get_variable(config[CONF_LOLAN_BMS_BLE_ID])
     for i, key in enumerate(TEMPERATURES):
         if key in config:
