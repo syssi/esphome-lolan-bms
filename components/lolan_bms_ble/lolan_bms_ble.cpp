@@ -501,8 +501,11 @@ void LolanBmsBle::dump_config() {  // NOLINT(google-readability-function-size,re
   LOG_SENSOR("", "Balancer voltage", this->balancer_voltage_sensor_);
   LOG_SENSOR("", "Total charged capacity", this->total_charged_capacity_sensor_);
   LOG_SENSOR("", "Total discharged capacity", this->total_discharged_capacity_sensor_);
+  LOG_SENSOR("", "Total runtime", this->total_runtime_sensor_);
+  LOG_SENSOR("", "Average cell voltage", this->average_cell_voltage_sensor_);
 
   LOG_TEXT_SENSOR("", "Errors", this->errors_text_sensor_);
+  LOG_TEXT_SENSOR("", "Total runtime formatted", this->total_runtime_formatted_text_sensor_);
 }
 
 void LolanBmsBle::publish_state_(binary_sensor::BinarySensor *binary_sensor, const bool &state) {
