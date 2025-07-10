@@ -58,7 +58,7 @@ static const uint16_t crcTable[256] = {
     0xE89B, 0x2D02, 0xA76F, 0x62F6, 0x69C4, 0xAC5D, 0x7FA0, 0xBA39, 0xB10B, 0x7492, 0x5368, 0x96F1, 0x9DC3, 0x585A,
     0x8BA7, 0x4E3E, 0x450C, 0x8095};
 
-static uint16_t crc16_lolan_calculate(const uint8_t *data, size_t size) {
+static uint16_t crc16_lolan(const uint8_t *data, size_t size) {
   uint16_t crc = 16;
   uint8_t r = 0;
 
@@ -69,18 +69,10 @@ static uint16_t crc16_lolan_calculate(const uint8_t *data, size_t size) {
     crc = crc & 0xFFFF;
   }
 
-  return 2 * (crc & 0xFFFF);
-}
+  crc = 2 * (crc & 0xFFFF);
 
-static uint16_t crc16_lolan(const uint8_t *data, size_t size) {
-  uint16_t calculated_crc = crc16_lolan_calculate(data, size);
-
-  // Apply 16-bit left rotation by 3 positions (equivalent to the JavaScript bit operations)
-  uint16_t rotated_crc = ((calculated_crc << 3) | (calculated_crc >> 13)) & 0xFFFF;
-
-  ESP_LOGD(TAG, "CRC: raw=0x%04X -> rotated=0x%04X", calculated_crc, rotated_crc);
-
-  return rotated_crc;
+  // Apply 16-bit left rotation by 3 positions
+  return ((crc << 3) | (crc >> 13)) & 0xFFFF;
 }
 
 void LolanBmsBle::gattc_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_t gattc_if,
@@ -362,11 +354,10 @@ void LolanBmsBle::decode_settings_data_(const std::vector<uint8_t> &data) {
     return;
   }
 
-  uint16_t received_crc = lolan_get_16bit(104);
-  uint16_t expected_crc = crc16_lolan(data.data(), 104);
-  if (received_crc != expected_crc) {
-    ESP_LOGW(TAG, "Settings frame CRC validation failed! Received: 0x%04X, Expected: 0x%04X", received_crc,
-             expected_crc);
+  uint16_t remote_crc = lolan_get_16bit(104);
+  uint16_t computed_crc = crc16_lolan(data.data(), 104);
+  if (remote_crc != computed_crc) {
+    ESP_LOGW(TAG, "Settings frame CRC validation failed! Remote: 0x%04X, Computed: 0x%04X", remote_crc, computed_crc);
     return;
   }
 
