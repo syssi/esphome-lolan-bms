@@ -75,13 +75,12 @@ static uint16_t crc16_lolan_calculate(const uint8_t *data, size_t size) {
 static uint16_t crc16_lolan(const uint8_t *data, size_t size) {
   uint16_t calculated_crc = crc16_lolan_calculate(data, size);
 
-  // Transform magic
-  uint16_t R = calculated_crc & 0xFFFF;
-  uint16_t P = 57344 & R;  // 57344 = 0xE000
-  R = (R << 3) & 65528;    // 65528 = 0xFFF8
-  R = R | ((P >> 13) & 7);
+  // Apply 16-bit left rotation by 3 positions (equivalent to the JavaScript bit operations)
+  uint16_t rotated_crc = ((calculated_crc << 3) | (calculated_crc >> 13)) & 0xFFFF;
 
-  return R;
+  ESP_LOGD(TAG, "CRC: raw=0x%04X -> rotated=0x%04X", calculated_crc, rotated_crc);
+
+  return rotated_crc;
 }
 
 void LolanBmsBle::gattc_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_t gattc_if,
