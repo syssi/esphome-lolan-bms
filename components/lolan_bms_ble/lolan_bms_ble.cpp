@@ -1,6 +1,13 @@
 #include "lolan_bms_ble.h"
 #include "esphome/core/log.h"
 #include "esphome/core/helpers.h"
+#include "esphome/core/version.h"
+
+#if ESPHOME_VERSION_CODE >= VERSION_CODE(2025, 12, 0)
+#define ADDR_STR(x) x
+#else
+#define ADDR_STR(x) (x).c_str()
+#endif
 
 namespace esphome {
 namespace lolan_bms_ble {
@@ -102,7 +109,8 @@ void LolanBmsBle::gattc_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_t 
       auto *char_notify =
           this->parent_->get_characteristic(LOLAN_BMS_SERVICE_UUID, LOLAN_BMS_NOTIFY_CHARACTERISTIC_UUID);
       if (char_notify == nullptr) {
-        ESP_LOGE(TAG, "[%s] No notify service found at device, not an Lolan BMS..?", this->parent_->address_str());
+        ESP_LOGE(TAG, "[%s] No notify service found at device, not an Lolan BMS..?",
+                 ADDR_STR(this->parent_->address_str()));
         break;
       }
       this->char_notify_handle_ = char_notify->handle;
@@ -116,7 +124,8 @@ void LolanBmsBle::gattc_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_t 
       auto *char_command =
           this->parent_->get_characteristic(LOLAN_BMS_SERVICE_UUID, LOLAN_BMS_CONTROL_CHARACTERISTIC_UUID);
       if (char_command == nullptr) {
-        ESP_LOGE(TAG, "[%s] No control service found at device, not an Lolan BMS..?", this->parent_->address_str());
+        ESP_LOGE(TAG, "[%s] No control service found at device, not an Lolan BMS..?",
+                 ADDR_STR(this->parent_->address_str()));
         break;
       }
       this->char_command_handle_ = char_command->handle;
@@ -144,7 +153,7 @@ void LolanBmsBle::gattc_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_t 
 
 void LolanBmsBle::update() {
   if (this->node_state != espbt::ClientState::ESTABLISHED) {
-    ESP_LOGW(TAG, "[%s] Not connected", this->parent_->address_str());
+    ESP_LOGW(TAG, "[%s] Not connected", ADDR_STR(this->parent_->address_str()));
     return;
   }
 
@@ -597,7 +606,7 @@ bool LolanBmsBle::send_command(uint16_t function) {
                                sizeof(frame), frame, ESP_GATT_WRITE_TYPE_NO_RSP, ESP_GATT_AUTH_REQ_NONE);
 
   if (status) {
-    ESP_LOGW(TAG, "[%s] esp_ble_gattc_write_char failed, status=%d", this->parent_->address_str(), status);
+    ESP_LOGW(TAG, "[%s] esp_ble_gattc_write_char failed, status=%d", ADDR_STR(this->parent_->address_str()), status);
   }
 
   return (status == 0);
@@ -623,7 +632,7 @@ bool LolanBmsBle::send_factory_reset() {
                                sizeof(frame), frame, ESP_GATT_WRITE_TYPE_NO_RSP, ESP_GATT_AUTH_REQ_NONE);
 
   if (status) {
-    ESP_LOGW(TAG, "[%s] esp_ble_gattc_write_char failed, status=%d", this->parent_->address_str(), status);
+    ESP_LOGW(TAG, "[%s] esp_ble_gattc_write_char failed, status=%d", ADDR_STR(this->parent_->address_str()), status);
   }
 
   return (status == 0);
