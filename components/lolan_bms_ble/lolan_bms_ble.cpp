@@ -139,7 +139,7 @@ void LolanBmsBle::gattc_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_t 
     }
     case ESP_GATTC_NOTIFY_EVT: {
       ESP_LOGV(TAG, "Notification received (handle 0x%02X): %s", param->notify.handle,
-               format_hex_pretty(param->notify.value, param->notify.value_len).c_str());
+               format_hex_pretty(param->notify.value, param->notify.value_len).c_str());  // NOLINT
 
       std::vector<uint8_t> data(param->notify.value, param->notify.value + param->notify.value_len);
 
@@ -162,7 +162,7 @@ void LolanBmsBle::update() {
 
 void LolanBmsBle::on_lolan_bms_ble_data(const uint8_t &handle, const std::vector<uint8_t> &data) {
   if (data.size() > MAX_RESPONSE_SIZE) {
-    ESP_LOGW(TAG, "Invalid response received: %s", format_hex_pretty(&data.front(), data.size()).c_str());
+    ESP_LOGW(TAG, "Invalid response received: %s", format_hex_pretty(&data.front(), data.size()).c_str());  // NOLINT
     return;
   }
 
@@ -186,7 +186,7 @@ void LolanBmsBle::on_lolan_bms_ble_data(const uint8_t &handle, const std::vector
       break;
     default:
       ESP_LOGW(TAG, "Unhandled response received (frame_type 0x%02X): %s", frame_type,
-               format_hex_pretty(&data.front(), data.size()).c_str());
+               format_hex_pretty(&data.front(), data.size()).c_str());  // NOLINT
   }
 }
 
@@ -199,7 +199,7 @@ void LolanBmsBle::decode_status_data_(const std::vector<uint8_t> &data) {
   };
 
   ESP_LOGI(TAG, "Status frame received");
-  ESP_LOGD(TAG, "  %s", format_hex_pretty(&data.front(), data.size()).c_str());
+  ESP_LOGD(TAG, "  %s", format_hex_pretty(&data.front(), data.size()).c_str());  // NOLINT
 
   if (data.size() < 40) {
     ESP_LOGW(TAG, "Invalid status frame length: %d", data.size());
@@ -267,7 +267,7 @@ void LolanBmsBle::decode_cell_info_data_(const std::vector<uint8_t> &data) {
   };
 
   ESP_LOGI(TAG, "Cell info frame received");
-  ESP_LOGD(TAG, "  %s", format_hex_pretty(&data.front(), data.size()).c_str());
+  ESP_LOGD(TAG, "  %s", format_hex_pretty(&data.front(), data.size()).c_str());  // NOLINT
 
   if (data.size() < 40) {
     ESP_LOGW(TAG, "Invalid cell info frame length: %d", data.size());
@@ -354,7 +354,7 @@ void LolanBmsBle::decode_settings_data_(const std::vector<uint8_t> &data) {
   };
 
   ESP_LOGI(TAG, "Settings frame received");
-  ESP_LOGD(TAG, "  %s", format_hex_pretty(&data.front(), data.size()).c_str());
+  ESP_LOGD(TAG, "  %s", format_hex_pretty(&data.front(), data.size()).c_str());  // NOLINT
 
   if (data.size() < 108) {
     ESP_LOGW(TAG, "Invalid settings frame length: %d", data.size());
@@ -509,7 +509,8 @@ void LolanBmsBle::decode_confirmations_(const std::vector<uint8_t> &data) {
       ESP_LOGI(TAG, "Current calibration successful");
       break;
     default:
-      ESP_LOGW(TAG, "Unhandled confirmation received: %s", format_hex_pretty(&data.front(), data.size()).c_str());
+      ESP_LOGW(TAG, "Unhandled confirmation received: %s",
+               format_hex_pretty(&data.front(), data.size()).c_str());  // NOLINT
   }
 }
 
@@ -599,7 +600,7 @@ bool LolanBmsBle::send_command(uint16_t function) {
   frame[5] = this->password_ >> 0;
 
   ESP_LOGD(TAG, "Send command (handle 0x%02X): %s", this->char_command_handle_,
-           format_hex_pretty(frame, sizeof(frame)).c_str());
+           format_hex_pretty(frame, sizeof(frame)).c_str());  // NOLINT
 
   auto status =
       esp_ble_gattc_write_char(this->parent_->get_gattc_if(), this->parent_->get_conn_id(), this->char_command_handle_,
@@ -625,7 +626,7 @@ bool LolanBmsBle::send_factory_reset() {
   frame[7] = 0x00;
 
   ESP_LOGD(TAG, "Send factory reset (handle 0x%02X): %s", this->char_command_handle_,
-           format_hex_pretty(frame, sizeof(frame)).c_str());
+           format_hex_pretty(frame, sizeof(frame)).c_str());  // NOLINT
 
   auto status =
       esp_ble_gattc_write_char(this->parent_->get_gattc_if(), this->parent_->get_conn_id(), this->char_command_handle_,
