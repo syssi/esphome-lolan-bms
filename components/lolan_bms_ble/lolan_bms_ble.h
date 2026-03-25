@@ -97,33 +97,33 @@ class LolanBmsBle : public esphome::ble_client::BLEClientNode, public PollingCom
   void set_password(uint32_t password) { this->password_ = password; }
 
  protected:
-  binary_sensor::BinarySensor *charging_binary_sensor_;
-  binary_sensor::BinarySensor *discharging_binary_sensor_;
+  binary_sensor::BinarySensor *charging_binary_sensor_{nullptr};
+  binary_sensor::BinarySensor *discharging_binary_sensor_{nullptr};
 
-  sensor::Sensor *total_voltage_sensor_;
-  sensor::Sensor *current_sensor_;
-  sensor::Sensor *power_sensor_;
-  sensor::Sensor *charging_power_sensor_;
-  sensor::Sensor *discharging_power_sensor_;
-  sensor::Sensor *error_bitmask_sensor_;
-  sensor::Sensor *state_of_charge_sensor_;
-  sensor::Sensor *charging_cycles_sensor_;
-  sensor::Sensor *min_cell_voltage_sensor_;
-  sensor::Sensor *max_cell_voltage_sensor_;
-  sensor::Sensor *min_voltage_cell_sensor_;
-  sensor::Sensor *max_voltage_cell_sensor_;
-  sensor::Sensor *delta_cell_voltage_sensor_;
-  sensor::Sensor *average_cell_voltage_sensor_;
-  sensor::Sensor *total_runtime_sensor_;
-  sensor::Sensor *balancer_voltage_sensor_;
-  sensor::Sensor *total_charged_capacity_sensor_;
-  sensor::Sensor *total_discharged_capacity_sensor_;
+  sensor::Sensor *total_voltage_sensor_{nullptr};
+  sensor::Sensor *current_sensor_{nullptr};
+  sensor::Sensor *power_sensor_{nullptr};
+  sensor::Sensor *charging_power_sensor_{nullptr};
+  sensor::Sensor *discharging_power_sensor_{nullptr};
+  sensor::Sensor *error_bitmask_sensor_{nullptr};
+  sensor::Sensor *state_of_charge_sensor_{nullptr};
+  sensor::Sensor *charging_cycles_sensor_{nullptr};
+  sensor::Sensor *min_cell_voltage_sensor_{nullptr};
+  sensor::Sensor *max_cell_voltage_sensor_{nullptr};
+  sensor::Sensor *min_voltage_cell_sensor_{nullptr};
+  sensor::Sensor *max_voltage_cell_sensor_{nullptr};
+  sensor::Sensor *delta_cell_voltage_sensor_{nullptr};
+  sensor::Sensor *average_cell_voltage_sensor_{nullptr};
+  sensor::Sensor *total_runtime_sensor_{nullptr};
+  sensor::Sensor *balancer_voltage_sensor_{nullptr};
+  sensor::Sensor *total_charged_capacity_sensor_{nullptr};
+  sensor::Sensor *total_discharged_capacity_sensor_{nullptr};
 
-  switch_::Switch *charging_switch_;
-  switch_::Switch *discharging_switch_;
+  switch_::Switch *charging_switch_{nullptr};
+  switch_::Switch *discharging_switch_{nullptr};
 
-  text_sensor::TextSensor *errors_text_sensor_;
-  text_sensor::TextSensor *total_runtime_formatted_text_sensor_;
+  text_sensor::TextSensor *errors_text_sensor_{nullptr};
+  text_sensor::TextSensor *total_runtime_formatted_text_sensor_{nullptr};
 
   struct Cell {
     sensor::Sensor *cell_voltage_sensor_{nullptr};
