@@ -35,19 +35,19 @@ CONFIG_SCHEMA = LOLAN_BMS_BLE_COMPONENT_SCHEMA.extend(
     {
         cv.Optional(CONF_RETRIEVE_SETTINGS): button.button_schema(
             LolanButton, icon=ICON_RETRIEVE_SETTINGS
-        ).extend(cv.COMPONENT_SCHEMA),
+        ),
         cv.Optional(CONF_FACTORY_RESET): button.button_schema(
             LolanButton, icon=ICON_FACTORY_RESET
-        ).extend(cv.COMPONENT_SCHEMA),
+        ),
         cv.Optional(CONF_RESET_CHARGING_CYCLES): button.button_schema(
             LolanButton, icon=ICON_RESET_CHARGING_CYCLES
-        ).extend(cv.COMPONENT_SCHEMA),
+        ),
         cv.Optional(CONF_RESET_TOTAL_CHARGED_CAPACITY): button.button_schema(
             LolanButton, icon=ICON_RESET_TOTAL_CHARGED_CAPACITY
-        ).extend(cv.COMPONENT_SCHEMA),
+        ),
         cv.Optional(CONF_RESET_TOTAL_DISCHARGED_CAPACITY): button.button_schema(
             LolanButton, icon=ICON_RESET_TOTAL_DISCHARGED_CAPACITY
-        ).extend(cv.COMPONENT_SCHEMA),
+        ),
     }
 )
 
