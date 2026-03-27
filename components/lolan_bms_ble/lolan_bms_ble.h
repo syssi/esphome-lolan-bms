@@ -133,8 +133,8 @@ class LolanBmsBle : public esphome::ble_client::BLEClientNode, public PollingCom
     sensor::Sensor *temperature_sensor_{nullptr};
   } temperatures_[2];
 
-  uint16_t char_notify_handle_;
-  uint16_t char_command_handle_;
+  uint16_t char_notify_handle_{0};
+  uint16_t char_command_handle_{0};
   uint32_t password_ = 12345678;
 
   void decode_settings_data_(const std::vector<uint8_t> &data);
