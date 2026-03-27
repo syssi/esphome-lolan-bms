@@ -1,7 +1,7 @@
 import esphome.codegen as cg
 from esphome.components import text_sensor
 import esphome.config_validation as cv
-from esphome.const import ICON_TIMELAPSE
+from esphome.const import ENTITY_CATEGORY_DIAGNOSTIC, ICON_TIMELAPSE
 
 from . import LOLAN_BMS_BLE_COMPONENT_SCHEMA
 
@@ -22,11 +22,10 @@ TEXT_SENSORS = [
 CONFIG_SCHEMA = LOLAN_BMS_BLE_COMPONENT_SCHEMA.extend(
     {
         cv.Optional(CONF_ERRORS): text_sensor.text_sensor_schema(
-            text_sensor.TextSensor,
             icon=ICON_ERRORS,
+            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
         ),
         cv.Optional(CONF_TOTAL_RUNTIME_FORMATTED): text_sensor.text_sensor_schema(
-            text_sensor.TextSensor,
             icon=ICON_TIMELAPSE,
         ),
     }
