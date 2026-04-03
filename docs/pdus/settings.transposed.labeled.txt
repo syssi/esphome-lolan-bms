@@ -7,7 +7,7 @@
      6	0c  Output voltage offset     uint8
      7	00  Input voltage offset      uint8
      8	00  Max charging current      uint16
-     9	32  Max charging current 
+     9	32  Max charging current
     10	00  Max discharging current   uint16
     11	50  Max discharging current
     12	08  Charging current zero     uint8

@@ -60,7 +60,7 @@ esphome run esp32-ble-example.yaml
 [D][switch:055]: 'lolan-bms-ble discharging': Sending state ON
 [D][switch:055]: 'lolan-bms-ble charging': Sending state ON
 [D][sensor:104]: 'lolan-bms-ble error bitmask': Sending state 0.00000  with 0 decimals of accuracy
-[V][text_sensor:015]: 'lolan-bms-ble errors': Received new state 
+[V][text_sensor:015]: 'lolan-bms-ble errors': Received new state
 [D][text_sensor:069]: 'lolan-bms-ble errors': Sending state ''
 [D][sensor:104]: 'lolan-bms-ble total voltage': Sending state 23.12797 V with 2 decimals of accuracy
 [D][sensor:104]: 'lolan-bms-ble current': Sending state 0.00000 A with 2 decimals of accuracy
