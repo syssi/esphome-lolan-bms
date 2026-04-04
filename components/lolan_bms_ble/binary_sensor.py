@@ -12,21 +12,22 @@ CODEOWNERS = ["@syssi"]
 CONF_CHARGING = "charging"
 CONF_DISCHARGING = "discharging"
 
-BINARY_SENSORS = [
-    CONF_CHARGING,
-    CONF_DISCHARGING,
-]
+# key: binary_sensor_schema kwargs
+BINARY_SENSOR_DEFS = {
+    CONF_CHARGING: {
+        "icon": "mdi:battery-charging",
+        "entity_category": ENTITY_CATEGORY_DIAGNOSTIC,
+    },
+    CONF_DISCHARGING: {
+        "icon": "mdi:power-plug",
+        "entity_category": ENTITY_CATEGORY_DIAGNOSTIC,
+    },
+}
 
 CONFIG_SCHEMA = LOLAN_BMS_BLE_COMPONENT_SCHEMA.extend(
     {
-        cv.Optional(CONF_CHARGING): binary_sensor.binary_sensor_schema(
-            icon="mdi:battery-charging",
-            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-        ),
-        cv.Optional(CONF_DISCHARGING): binary_sensor.binary_sensor_schema(
-            icon="mdi:power-plug",
-            entity_category=ENTITY_CATEGORY_DIAGNOSTIC,
-        ),
+        cv.Optional(key): binary_sensor.binary_sensor_schema(**kwargs)
+        for key, kwargs in BINARY_SENSOR_DEFS.items()
     }
 )
 
@@ -35,7 +36,7 @@ async def to_code(config):
     from . import CONF_LOLAN_BMS_BLE_ID
 
     hub = await cg.get_variable(config[CONF_LOLAN_BMS_BLE_ID])
-    for key in BINARY_SENSORS:
+    for key in BINARY_SENSOR_DEFS:
         if key in config:
             conf = config[key]
             sens = await binary_sensor.new_binary_sensor(conf)
