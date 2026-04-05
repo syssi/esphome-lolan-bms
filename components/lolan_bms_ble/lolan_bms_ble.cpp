@@ -33,7 +33,7 @@ static const uint8_t MAX_RESPONSE_SIZE = 108;
 static const uint8_t MAX_KNOWN_CELL_COUNT = 16;
 
 static const uint8_t ERRORS_SIZE = 8;
-static const char *const ERRORS[ERRORS_SIZE] = {
+static constexpr const char *const ERRORS[ERRORS_SIZE] = {
     "Total voltage overcharge protection",   // 0000 0001
     "Single voltage overcharge protection",  // 0000 0010
     "Charge overcurrent protection",         // 0000 0100
