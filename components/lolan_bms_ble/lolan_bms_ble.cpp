@@ -82,6 +82,7 @@ static uint16_t crc16_lolan(const uint8_t *data, size_t size) {
   return ((crc << 3) | (crc >> 13)) & 0xFFFF;
 }
 
+#ifdef USE_ESP32
 void LolanBmsBle::gattc_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_t gattc_if,
                                       esp_ble_gattc_cb_param_t *param) {
   switch (event) {
@@ -151,6 +152,9 @@ void LolanBmsBle::gattc_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_t 
   }
 }
 
+#endif
+
+#ifdef USE_ESP32
 void LolanBmsBle::update() {
   if (this->node_state != espbt::ClientState::ESTABLISHED) {
     ESP_LOGW(TAG, "[%s] Not connected", ADDR_STR(this->parent_->address_str()));
@@ -159,6 +163,11 @@ void LolanBmsBle::update() {
 
   this->send_command(LOLAN_COMMAND_REQ_STATUS);
 }
+#endif
+
+#ifndef USE_ESP32
+void LolanBmsBle::update() {}
+#endif
 
 void LolanBmsBle::on_lolan_bms_ble_data(const uint8_t &handle, const std::vector<uint8_t> &data) {
   if (data.size() > MAX_RESPONSE_SIZE) {
@@ -202,7 +211,7 @@ void LolanBmsBle::decode_status_data_(const std::vector<uint8_t> &data) {
   ESP_LOGD(TAG, "  %s", format_hex_pretty(&data.front(), data.size()).c_str());  // NOLINT
 
   if (data.size() < 40) {
-    ESP_LOGW(TAG, "Invalid status frame length: %d", data.size());
+    ESP_LOGW(TAG, "Invalid status frame length: %zu", data.size());
     return;
   }
 
@@ -270,7 +279,7 @@ void LolanBmsBle::decode_cell_info_data_(const std::vector<uint8_t> &data) {
   ESP_LOGD(TAG, "  %s", format_hex_pretty(&data.front(), data.size()).c_str());  // NOLINT
 
   if (data.size() < 40) {
-    ESP_LOGW(TAG, "Invalid cell info frame length: %d", data.size());
+    ESP_LOGW(TAG, "Invalid cell info frame length: %zu", data.size());
     return;
   }
 
@@ -357,7 +366,7 @@ void LolanBmsBle::decode_settings_data_(const std::vector<uint8_t> &data) {
   ESP_LOGD(TAG, "  %s", format_hex_pretty(&data.front(), data.size()).c_str());  // NOLINT
 
   if (data.size() < 108) {
-    ESP_LOGW(TAG, "Invalid settings frame length: %d", data.size());
+    ESP_LOGW(TAG, "Invalid settings frame length: %zu", data.size());
     return;
   }
 
@@ -482,7 +491,7 @@ void LolanBmsBle::decode_confirmations_(const std::vector<uint8_t> &data) {
   };
 
   if (data.size() < 4) {
-    ESP_LOGW(TAG, "Invalid confirmation frame length: %d", data.size());
+    ESP_LOGW(TAG, "Invalid confirmation frame length: %zu", data.size());
     return;
   }
 
@@ -589,6 +598,7 @@ void LolanBmsBle::publish_state_(text_sensor::TextSensor *text_sensor, const std
   text_sensor->publish_state(state);
 }
 
+#ifdef USE_ESP32
 bool LolanBmsBle::send_command(uint16_t function) {
   uint8_t frame[6];
 
@@ -638,6 +648,11 @@ bool LolanBmsBle::send_factory_reset() {
 
   return (status == 0);
 }
+
+#else
+bool LolanBmsBle::send_command(uint16_t function) { return false; }
+bool LolanBmsBle::send_factory_reset() { return false; }
+#endif
 
 std::string LolanBmsBle::bitmask_to_string_(const char *const messages[], const uint8_t &messages_size,
                                             const uint8_t &mask) {
