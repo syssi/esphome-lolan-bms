@@ -72,24 +72,24 @@ static const std::vector<uint8_t> STATUS_FRAME_ONLY_CHARGING_ENABLED = {
     0x41, 0xb9, 0x02, 0x90,  // total_voltage = 23.13V (IEEE float)
     0x00, 0x00, 0x00, 0x00,  // negative_current = 0A (IEEE float)
     0x00, 0x00, 0x00, 0x00,  // current = 0A (IEEE float)
-    0x41, 0xd7, 0xd9, 0xb0,  // temp1 = 27.34°C (IEEE float)
-    0x41, 0xcd, 0x60, 0x00,  // temp2 = 26.38°C (IEEE float)
+    0x41, 0xd7, 0xd9, 0xb0,  // temp1 = 26.98°C (IEEE float)
+    0x41, 0xcd, 0x60, 0x00,  // temp2 = 25.67°C (IEEE float)
     0x42, 0x9d, 0x93, 0x20,  // total_discharged = 78.79Ah (IEEE float)
     0x42, 0x47, 0x9e, 0x44,  // total_charged = 49.90Ah (IEEE float)
-    0x00, 0x36, 0x3e, 0x5a,  // total_runtime = 3554970s (uint32)
+    0x00, 0x36, 0x3e, 0x5a,  // total_runtime = 3554906s (uint32)
     0x00, 0x01, 0x00, 0x27,  // cycles = 1, SOC = 39%
 };
 
 static const std::vector<uint8_t> STATUS_FRAME_ONLY_DISCHARGING_ENABLED = {
     0x01, 0x00, 0x01, 0x00,  // frame_type, reserved, flags=0x01, error=0x00
-    0x41, 0xb9, 0x9d, 0x71,  // total_voltage = 23.13V (IEEE float)
+    0x41, 0xb9, 0x9d, 0x71,  // total_voltage = 23.20V (IEEE float)
     0x00, 0x00, 0x00, 0x00,  // negative_current = 0A (IEEE float)
     0x00, 0x00, 0x00, 0x00,  // current = 0A (IEEE float)
-    0x41, 0xd8, 0x18, 0x90,  // temp1 = 27.56°C (IEEE float)
-    0x41, 0xcd, 0xfe, 0x50,  // temp2 = 26.94°C (IEEE float)
+    0x41, 0xd8, 0x18, 0x90,  // temp1 = 27.01°C (IEEE float)
+    0x41, 0xcd, 0xfe, 0x50,  // temp2 = 25.75°C (IEEE float)
     0x42, 0x9d, 0x93, 0x20,  // total_discharged = 78.79Ah (IEEE float)
     0x42, 0x47, 0xaf, 0xe4,  // total_charged = 49.92Ah (IEEE float)
-    0x00, 0x36, 0x3e, 0x7b,  // total_runtime = 3555003s (uint32)
+    0x00, 0x36, 0x3e, 0x7b,  // total_runtime = 3554939s (uint32)
     0x00, 0x01, 0x00, 0x27,  // cycles = 1, SOC = 39%
 };
 
@@ -130,38 +130,38 @@ static const std::vector<uint8_t> CELL_INFO_FRAME_1 = {
 // Contains: battery settings, protection limits, serial number, CRC
 
 // Settings frame with various parameters
-// cell_count=7  cell_voltage_full=3.4V  cell_voltage_empty=1.0V
-// charge_current_limit=50A  discharge_current_limit=80A
-// temp_high=76°C  temp_low=102°C
+// cell_count=7  max_charging_current=50A  max_discharging_current=80A  cycle_count=1
 static const std::vector<uint8_t> SETTINGS_FRAME_1 = {
-    0x03, 0x6c, 0x00, 0xbc,  // frame_type, length=108, reserved
-    0x61, 0x4e, 0x0c, 0x00,  // BLE password (uint32)
-    0x00, 0x32,              // output_voltage_offset
-    0x00, 0x50,              // input_voltage_offset
-    0x08, 0x0f, 0x07, 0x01,  // max_charging_current=50, max_discharging_current=80, charge_zero=8, discharge_zero=15
-    0xff, 0xfa, 0x00, 0x01,  // unknown, cycle_count=1
-    0x42, 0x51, 0x09, 0x41,  // battery_capacity = 156.58Ah (IEEE float)
-    0x40, 0x56, 0x66, 0x66,  // cell_voltage_full = 3.4V (IEEE float)
-    0x3f, 0x80, 0x00, 0x00,  // cell_voltage_empty = 1.0V (IEEE float)
-    0x40, 0xb7, 0x95, 0x81,  // charge_current_limit = 58.72A (IEEE float)
-    0x40, 0xb2, 0xb8, 0x52,  // discharge_current_limit = 44.73A (IEEE float)
-    0x41, 0x9a, 0x00, 0x00,  // temp_high = 76°C (IEEE float)
-    0x41, 0xcc, 0x00, 0x00,  // temp_low = 102°C (IEEE float)
-    0x40, 0x30, 0x00, 0x00,  // cell_undervoltage_protection = 2.625V (IEEE float)
-    0x40, 0x69, 0x99, 0x9a,  // cell_overvoltage_protection = 2.6V (IEEE float)
-    0x42, 0x82, 0x00, 0x00,  // mosfet_overtemperature_protection = 54°C (IEEE float)
-    0x42, 0x82, 0x00, 0x00,  // circuit_temperature_protection = 54°C (IEEE float)
-    0x46, 0x1c, 0x40, 0x00,  // temperature_adjustment = 15600 (IEEE float)
-    0xcc, 0x10, 0xf1, 0x52,  // serial_number = 1392851660 (uint32)
-    0x01, 0x34, 0x8b, 0x9a,  // software_date = 20361801 (uint32)
-    0x40, 0x30, 0x00, 0x00,  // lowpower_voltage = 2.625V (IEEE float)
-    0x40, 0x53, 0x33, 0x33,  // battery4_adjustment = 3.3V (IEEE float)
-    0x3c, 0x23, 0xd7, 0x0a,  // voltage_equal = 0.137V (IEEE float)
-    0x41, 0xc0, 0xcc, 0xcd,  // overcharge_release_voltage = 24.2V (IEEE float)
-    0x40, 0x5c, 0xcc, 0xcd,  // overcharge_cell_voltage = 2.725V (IEEE float)
-    0x41, 0xa2, 0x66, 0x66,  // discharge_release_voltage = 20.625V (IEEE float)
-    0x40, 0x39, 0x99, 0x9a,  // discharge_cell_voltage = 2.225V (IEEE float)
-    0x35, 0xe2, 0x5a, 0xa5,  // CRC16 (uint16)
+    0x03, 0x6c,              // frame_type=0x03, unknown=0x6c
+    0x00, 0xbc, 0x61, 0x4e,  // BLE password = 12345678 (uint32, bytes 2-5)
+    0x0c, 0x00,              // output_voltage_offset=12, input_voltage_offset=0
+    0x00, 0x32,              // max_charging_current = 50A (uint16)
+    0x00, 0x50,              // max_discharging_current = 80A (uint16)
+    0x08, 0x0f, 0x07, 0x01,  // charge_zero=8, discharge_zero=15, cell_count=7, battery_type=1
+    0xff, 0xfa, 0x00, 0x01,  // mNC2=0xfffa, cycle_count=1
+    0x42, 0x51, 0x09, 0x41,  // battery_capacity = 52.26Ah (IEEE float)
+    0x40, 0x56, 0x66, 0x66,  // start_balancing_voltage = 3.350V (IEEE float)
+    0x3f, 0x80, 0x00, 0x00,  // unknown28 = 1.0 (IEEE float)
+    0x40, 0xb7, 0x95, 0x81,  // ref_discharging_voltage = 5.737V (IEEE float)
+    0x40, 0xb2, 0xb8, 0x52,  // ref_charging_voltage = 5.585V (IEEE float)
+    0x41, 0x9a, 0x00, 0x00,  // pack_undervoltage_protection = 19.25V (IEEE float)
+    0x41, 0xcc, 0x00, 0x00,  // pack_overvoltage_protection = 25.5V (IEEE float)
+    0x40, 0x30, 0x00, 0x00,  // cell_undervoltage_protection = 2.75V (IEEE float)
+    0x40, 0x69, 0x99, 0x9a,  // cell_overvoltage_protection = 3.65V (IEEE float)
+    0x42, 0x82, 0x00, 0x00,  // mosfet_overtemperature_protection = 65°C (IEEE float)
+    0x42, 0x82, 0x00, 0x00,  // circuit_temperature_protection = 65°C (IEEE float)
+    0x46, 0x1c, 0x40, 0x00,  // temperature_adjustment = 10000 (IEEE float)
+    0xcc, 0x10, 0xf1, 0x52,  // serial_number = 3423662418 (uint32)
+    0x01, 0x34, 0x8b, 0x9a,  // software_date = 20220826 (uint32)
+    0x40, 0x30, 0x00, 0x00,  // lowpower_voltage = 2.75V (IEEE float)
+    0x40, 0x53, 0x33, 0x33,  // battery4_adjustment = 3.3 (IEEE float)
+    0x3c, 0x23, 0xd7, 0x0a,  // voltage_equal = 0.01V (IEEE float)
+    0x41, 0xc0, 0xcc, 0xcd,  // overcharge_release_voltage = 24.1V (IEEE float)
+    0x40, 0x5c, 0xcc, 0xcd,  // overcharge_cell_voltage = 3.45V (IEEE float)
+    0x41, 0xa2, 0x66, 0x66,  // discharge_release_voltage = 20.3V (IEEE float)
+    0x40, 0x39, 0x99, 0x9a,  // discharge_cell_voltage = 2.9V (IEEE float)
+    0x35, 0xe2,              // CRC16
+    0x5a, 0xa5,              // unknown
 };
 
 // ── Invalid frames for rejection logic ────────────────────────────────────────
