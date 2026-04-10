@@ -82,84 +82,6 @@ static uint16_t crc16_lolan(const uint8_t *data, size_t size) {
   return ((crc << 3) | (crc >> 13)) & 0xFFFF;
 }
 
-void LolanBmsBle::gattc_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_t gattc_if,
-                                      esp_ble_gattc_cb_param_t *param) {
-  switch (event) {
-    case ESP_GATTC_OPEN_EVT: {
-      break;
-    }
-    case ESP_GATTC_DISCONNECT_EVT: {
-      this->node_state = espbt::ClientState::IDLE;
-
-      // this->publish_state_(this->voltage_sensor_, NAN);
-
-      if (this->char_notify_handle_ != 0) {
-        auto status = esp_ble_gattc_unregister_for_notify(this->parent()->get_gattc_if(),
-                                                          this->parent()->get_remote_bda(), this->char_notify_handle_);
-        if (status) {
-          ESP_LOGW(TAG, "esp_ble_gattc_unregister_for_notify failed, status=%d", status);
-        }
-      }
-      this->char_notify_handle_ = 0;
-      this->char_command_handle_ = 0;
-
-      break;
-    }
-    case ESP_GATTC_SEARCH_CMPL_EVT: {
-      auto *char_notify =
-          this->parent_->get_characteristic(LOLAN_BMS_SERVICE_UUID, LOLAN_BMS_NOTIFY_CHARACTERISTIC_UUID);
-      if (char_notify == nullptr) {
-        ESP_LOGE(TAG, "[%s] No notify service found at device, not an Lolan BMS..?",
-                 ADDR_STR(this->parent_->address_str()));
-        break;
-      }
-      this->char_notify_handle_ = char_notify->handle;
-
-      auto status = esp_ble_gattc_register_for_notify(this->parent()->get_gattc_if(), this->parent()->get_remote_bda(),
-                                                      char_notify->handle);
-      if (status) {
-        ESP_LOGW(TAG, "esp_ble_gattc_register_for_notify failed, status=%d", status);
-      }
-
-      auto *char_command =
-          this->parent_->get_characteristic(LOLAN_BMS_SERVICE_UUID, LOLAN_BMS_CONTROL_CHARACTERISTIC_UUID);
-      if (char_command == nullptr) {
-        ESP_LOGE(TAG, "[%s] No control service found at device, not an Lolan BMS..?",
-                 ADDR_STR(this->parent_->address_str()));
-        break;
-      }
-      this->char_command_handle_ = char_command->handle;
-      break;
-    }
-    case ESP_GATTC_REG_FOR_NOTIFY_EVT: {
-      this->node_state = espbt::ClientState::ESTABLISHED;
-
-      this->send_command(LOLAN_COMMAND_REQ_STATUS);
-      break;
-    }
-    case ESP_GATTC_NOTIFY_EVT: {
-      ESP_LOGV(TAG, "Notification received (handle 0x%02X): %s", param->notify.handle,
-               format_hex_pretty(param->notify.value, param->notify.value_len).c_str());  // NOLINT
-
-      std::vector<uint8_t> data(param->notify.value, param->notify.value + param->notify.value_len);
-
-      this->on_lolan_bms_ble_data(param->notify.handle, data);
-      break;
-    }
-    default:
-      break;
-  }
-}
-
-void LolanBmsBle::update() {
-  if (this->node_state != espbt::ClientState::ESTABLISHED) {
-    ESP_LOGW(TAG, "[%s] Not connected", ADDR_STR(this->parent_->address_str()));
-    return;
-  }
-
-  this->send_command(LOLAN_COMMAND_REQ_STATUS);
-}
-
 void LolanBmsBle::on_lolan_bms_ble_data(const uint8_t &handle, const std::vector<uint8_t> &data) {
   if (data.size() > MAX_RESPONSE_SIZE) {
     ESP_LOGW(TAG, "Invalid response received: %s", format_hex_pretty(&data.front(), data.size()).c_str());  // NOLINT
@@ -202,7 +124,7 @@ void LolanBmsBle::decode_status_data_(const std::vector<uint8_t> &data) {
   ESP_LOGD(TAG, "  %s", format_hex_pretty(&data.front(), data.size()).c_str());  // NOLINT
 
   if (data.size() < 40) {
-    ESP_LOGW(TAG, "Invalid status frame length: %d", data.size());
+    ESP_LOGW(TAG, "Invalid status frame length: %zu", data.size());
     return;
   }
 
@@ -270,7 +192,7 @@ void LolanBmsBle::decode_cell_info_data_(const std::vector<uint8_t> &data) {
   ESP_LOGD(TAG, "  %s", format_hex_pretty(&data.front(), data.size()).c_str());  // NOLINT
 
   if (data.size() < 40) {
-    ESP_LOGW(TAG, "Invalid cell info frame length: %d", data.size());
+    ESP_LOGW(TAG, "Invalid cell info frame length: %zu", data.size());
     return;
   }
 
@@ -357,7 +279,7 @@ void LolanBmsBle::decode_settings_data_(const std::vector<uint8_t> &data) {
   ESP_LOGD(TAG, "  %s", format_hex_pretty(&data.front(), data.size()).c_str());  // NOLINT
 
   if (data.size() < 108) {
-    ESP_LOGW(TAG, "Invalid settings frame length: %d", data.size());
+    ESP_LOGW(TAG, "Invalid settings frame length: %zu", data.size());
     return;
   }
 
@@ -482,7 +404,7 @@ void LolanBmsBle::decode_confirmations_(const std::vector<uint8_t> &data) {
   };
 
   if (data.size() < 4) {
-    ESP_LOGW(TAG, "Invalid confirmation frame length: %d", data.size());
+    ESP_LOGW(TAG, "Invalid confirmation frame length: %zu", data.size());
     return;
   }
 
@@ -589,6 +511,86 @@ void LolanBmsBle::publish_state_(text_sensor::TextSensor *text_sensor, const std
   text_sensor->publish_state(state);
 }
 
+#ifdef USE_ESP32
+
+void LolanBmsBle::gattc_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_t gattc_if,
+                                      esp_ble_gattc_cb_param_t *param) {
+  switch (event) {
+    case ESP_GATTC_OPEN_EVT: {
+      break;
+    }
+    case ESP_GATTC_DISCONNECT_EVT: {
+      this->node_state = espbt::ClientState::IDLE;
+
+      // this->publish_state_(this->voltage_sensor_, NAN);
+
+      if (this->char_notify_handle_ != 0) {
+        auto status = esp_ble_gattc_unregister_for_notify(this->parent()->get_gattc_if(),
+                                                          this->parent()->get_remote_bda(), this->char_notify_handle_);
+        if (status) {
+          ESP_LOGW(TAG, "esp_ble_gattc_unregister_for_notify failed, status=%d", status);
+        }
+      }
+      this->char_notify_handle_ = 0;
+      this->char_command_handle_ = 0;
+
+      break;
+    }
+    case ESP_GATTC_SEARCH_CMPL_EVT: {
+      auto *char_notify =
+          this->parent_->get_characteristic(LOLAN_BMS_SERVICE_UUID, LOLAN_BMS_NOTIFY_CHARACTERISTIC_UUID);
+      if (char_notify == nullptr) {
+        ESP_LOGE(TAG, "[%s] No notify service found at device, not an Lolan BMS..?",
+                 ADDR_STR(this->parent_->address_str()));
+        break;
+      }
+      this->char_notify_handle_ = char_notify->handle;
+
+      auto status = esp_ble_gattc_register_for_notify(this->parent()->get_gattc_if(), this->parent()->get_remote_bda(),
+                                                      char_notify->handle);
+      if (status) {
+        ESP_LOGW(TAG, "esp_ble_gattc_register_for_notify failed, status=%d", status);
+      }
+
+      auto *char_command =
+          this->parent_->get_characteristic(LOLAN_BMS_SERVICE_UUID, LOLAN_BMS_CONTROL_CHARACTERISTIC_UUID);
+      if (char_command == nullptr) {
+        ESP_LOGE(TAG, "[%s] No control service found at device, not an Lolan BMS..?",
+                 ADDR_STR(this->parent_->address_str()));
+        break;
+      }
+      this->char_command_handle_ = char_command->handle;
+      break;
+    }
+    case ESP_GATTC_REG_FOR_NOTIFY_EVT: {
+      this->node_state = espbt::ClientState::ESTABLISHED;
+
+      this->send_command(LOLAN_COMMAND_REQ_STATUS);
+      break;
+    }
+    case ESP_GATTC_NOTIFY_EVT: {
+      ESP_LOGV(TAG, "Notification received (handle 0x%02X): %s", param->notify.handle,
+               format_hex_pretty(param->notify.value, param->notify.value_len).c_str());  // NOLINT
+
+      std::vector<uint8_t> data(param->notify.value, param->notify.value + param->notify.value_len);
+
+      this->on_lolan_bms_ble_data(param->notify.handle, data);
+      break;
+    }
+    default:
+      break;
+  }
+}
+
+void LolanBmsBle::update() {
+  if (this->node_state != espbt::ClientState::ESTABLISHED) {
+    ESP_LOGW(TAG, "[%s] Not connected", ADDR_STR(this->parent_->address_str()));
+    return;
+  }
+
+  this->send_command(LOLAN_COMMAND_REQ_STATUS);
+}
+
 bool LolanBmsBle::send_command(uint16_t function) {
   uint8_t frame[6];
 
@@ -638,6 +640,14 @@ bool LolanBmsBle::send_factory_reset() {
 
   return (status == 0);
 }
+
+#else
+
+void LolanBmsBle::update() {}
+bool LolanBmsBle::send_command(uint16_t function) { return false; }
+bool LolanBmsBle::send_factory_reset() { return false; }
+
+#endif
 
 std::string LolanBmsBle::bitmask_to_string_(const char *const messages[], const uint8_t &messages_size,
                                             const uint8_t &mask) {
