@@ -13,8 +13,7 @@
 namespace espbt = esphome::esp32_ble_tracker;
 #endif
 
-namespace esphome {
-namespace lolan_bms_ble {
+namespace esphome::lolan_bms_ble {
 
 class LolanBmsBle :
 #ifdef USE_ESP32
@@ -182,5 +181,4 @@ class LolanBmsBle :
   }
 };
 
-}  // namespace lolan_bms_ble
-}  // namespace esphome
+}  // namespace esphome::lolan_bms_ble

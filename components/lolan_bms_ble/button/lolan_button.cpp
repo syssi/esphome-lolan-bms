@@ -2,8 +2,7 @@
 #include "esphome/core/log.h"
 #include "esphome/core/application.h"
 
-namespace esphome {
-namespace lolan_bms_ble {
+namespace esphome::lolan_bms_ble {
 
 static const char *const TAG = "lolan_bms_ble.button";
 
@@ -19,5 +18,4 @@ void LolanButton::press_action() {
   this->parent_->send_command(this->holding_register_);
 }
 
-}  // namespace lolan_bms_ble
-}  // namespace esphome
+}  // namespace esphome::lolan_bms_ble

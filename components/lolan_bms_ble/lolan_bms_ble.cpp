@@ -9,8 +9,7 @@
 #define ADDR_STR(x) (x).c_str()
 #endif
 
-namespace esphome {
-namespace lolan_bms_ble {
+namespace esphome::lolan_bms_ble {
 
 static const char *const TAG = "lolan_bms_ble";
 
@@ -666,5 +665,4 @@ std::string LolanBmsBle::bitmask_to_string_(const char *const messages[], const 
   return values;
 }
 
-}  // namespace lolan_bms_ble
-}  // namespace esphome
+}  // namespace esphome::lolan_bms_ble
