@@ -2,8 +2,7 @@
 #include "esphome/core/log.h"
 #include "esphome/core/application.h"
 
-namespace esphome {
-namespace lolan_bms_ble {
+namespace esphome::lolan_bms_ble {
 
 static const char *const TAG = "lolan_bms_ble.switch";
 
@@ -14,5 +13,4 @@ void LolanSwitch::write_state(bool state) {
   }
 }
 
-}  // namespace lolan_bms_ble
-}  // namespace esphome
+}  // namespace esphome::lolan_bms_ble

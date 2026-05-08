@@ -4,8 +4,7 @@
 #include "esphome/core/component.h"
 #include "esphome/components/switch/switch.h"
 
-namespace esphome {
-namespace lolan_bms_ble {
+namespace esphome::lolan_bms_ble {
 
 class LolanBmsBle;
 class LolanSwitch : public switch_::Switch, public Component {
@@ -24,5 +23,4 @@ class LolanSwitch : public switch_::Switch, public Component {
   uint16_t command_turn_off_;
 };
 
-}  // namespace lolan_bms_ble
-}  // namespace esphome
+}  // namespace esphome::lolan_bms_ble
