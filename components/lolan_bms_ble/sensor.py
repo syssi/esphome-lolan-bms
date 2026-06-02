@@ -19,6 +19,7 @@ from esphome.const import (
     UNIT_CELSIUS,
     UNIT_EMPTY,
     UNIT_PERCENT,
+    UNIT_SECOND,
     UNIT_VOLT,
     UNIT_WATT,
 )
@@ -60,7 +61,6 @@ ICON_TOTAL_CHARGED_CAPACITY = "mdi:battery-plus"
 ICON_TOTAL_DISCHARGED_CAPACITY = "mdi:battery-minus"
 
 UNIT_AMPERE_HOURS = "Ah"
-UNIT_SECONDS = "s"
 
 CELLS = [f"cell_voltage_{i}" for i in range(1, 17)]
 TEMPERATURES = [f"temperature_{i}" for i in range(1, 3)]
@@ -165,7 +165,7 @@ SENSOR_DEFS = {
         "state_class": STATE_CLASS_MEASUREMENT,
     },
     CONF_TOTAL_RUNTIME: {
-        "unit_of_measurement": UNIT_SECONDS,
+        "unit_of_measurement": UNIT_SECOND,
         "icon": ICON_TIMELAPSE,
         "accuracy_decimals": 0,
         "device_class": DEVICE_CLASS_EMPTY,
