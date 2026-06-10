@@ -262,4 +262,163 @@ TEST(LolanBmsBleButtonTest, FactoryResetCommandSent) {
   button.press();
 }
 
+// ── Online status tracker ─────────────────────────────────────────────────────
+
+TEST(LolanBmsBleOnlineStatusTrackerTest, ReachesThreshold) {
+  TestableLolanBmsBle bms;
+  binary_sensor::BinarySensor online_status;
+  bms.set_online_status_binary_sensor(&online_status);
+
+  for (int i = 0; i < 10; i++)
+    bms.track_online_status_();
+
+  EXPECT_FALSE(online_status.state);
+}
+
+TEST(LolanBmsBleOnlineStatusTrackerTest, DoesNotRepeatAfterThreshold) {
+  TestableLolanBmsBle bms;
+  binary_sensor::BinarySensor online_status;
+  bms.set_online_status_binary_sensor(&online_status);
+
+  for (int i = 0; i < 10; i++)
+    bms.track_online_status_();
+  EXPECT_EQ(bms.get_no_response_count(), 11);
+
+  bms.track_online_status_();
+  EXPECT_EQ(bms.get_no_response_count(), 11);
+}
+
+TEST(LolanBmsBleOnlineStatusTrackerTest, ResetRestoresOnlineStatus) {
+  TestableLolanBmsBle bms;
+  binary_sensor::BinarySensor online_status;
+  bms.set_online_status_binary_sensor(&online_status);
+
+  for (int i = 0; i < 10; i++)
+    bms.track_online_status_();
+  EXPECT_FALSE(online_status.state);
+
+  bms.reset_online_status_tracker_();
+  EXPECT_TRUE(online_status.state);
+  EXPECT_EQ(bms.get_no_response_count(), 0);
+}
+
+TEST(LolanBmsBleOnlineStatusTrackerTest, CanRetriggerAfterReset) {
+  TestableLolanBmsBle bms;
+  binary_sensor::BinarySensor online_status;
+  bms.set_online_status_binary_sensor(&online_status);
+
+  for (int i = 0; i < 10; i++)
+    bms.track_online_status_();
+  bms.reset_online_status_tracker_();
+
+  for (int i = 0; i < 10; i++)
+    bms.track_online_status_();
+  EXPECT_FALSE(online_status.state);
+}
+
+TEST(LolanBmsBleOnlineStatusTrackerTest, ValidFrameResetsCounter) {
+  TestableLolanBmsBle bms;
+
+  for (int i = 0; i < 5; i++)
+    bms.track_online_status_();
+  EXPECT_EQ(bms.get_no_response_count(), 5);
+
+  bms.on_lolan_bms_ble_data(0x00, STATUS_FRAME_CHARGING_AND_DISCHARGING);
+  EXPECT_EQ(bms.get_no_response_count(), 0);
+}
+
+TEST(LolanBmsBleOnlineStatusTrackerTest, NotYetAtThresholdStaysOnline) {
+  TestableLolanBmsBle bms;
+  binary_sensor::BinarySensor online_status;
+  bms.set_online_status_binary_sensor(&online_status);
+
+  online_status.publish_state(true);
+  for (int i = 0; i < 9; i++)
+    bms.track_online_status_();
+
+  EXPECT_TRUE(online_status.state);
+}
+
+// ── publish_device_unavailable_ ───────────────────────────────────────────────
+
+TEST(LolanBmsBlePublishDeviceUnavailableTest, SetsOnlineStatusFalse) {
+  TestableLolanBmsBle bms;
+  binary_sensor::BinarySensor online_status;
+  bms.set_online_status_binary_sensor(&online_status);
+
+  online_status.publish_state(true);
+  bms.publish_device_unavailable_();
+
+  EXPECT_FALSE(online_status.state);
+}
+
+TEST(LolanBmsBlePublishDeviceUnavailableTest, SetsNumericSensorsToNAN) {
+  TestableLolanBmsBle bms;
+  sensor::Sensor total_voltage, current, power, charging_power, discharging_power;
+  sensor::Sensor error_bitmask, state_of_charge, charging_cycles, total_runtime, balancer_voltage;
+  bms.set_total_voltage_sensor(&total_voltage);
+  bms.set_current_sensor(&current);
+  bms.set_power_sensor(&power);
+  bms.set_charging_power_sensor(&charging_power);
+  bms.set_discharging_power_sensor(&discharging_power);
+  bms.set_error_bitmask_sensor(&error_bitmask);
+  bms.set_state_of_charge_sensor(&state_of_charge);
+  bms.set_charging_cycles_sensor(&charging_cycles);
+  bms.set_total_runtime_sensor(&total_runtime);
+  bms.set_balancer_voltage_sensor(&balancer_voltage);
+
+  bms.publish_device_unavailable_();
+
+  EXPECT_TRUE(std::isnan(total_voltage.state));
+  EXPECT_TRUE(std::isnan(current.state));
+  EXPECT_TRUE(std::isnan(power.state));
+  EXPECT_TRUE(std::isnan(charging_power.state));
+  EXPECT_TRUE(std::isnan(discharging_power.state));
+  EXPECT_TRUE(std::isnan(error_bitmask.state));
+  EXPECT_TRUE(std::isnan(state_of_charge.state));
+  EXPECT_TRUE(std::isnan(charging_cycles.state));
+  EXPECT_TRUE(std::isnan(total_runtime.state));
+  EXPECT_TRUE(std::isnan(balancer_voltage.state));
+}
+
+TEST(LolanBmsBlePublishDeviceUnavailableTest, SetsCellAndTempSensorsToNAN) {
+  TestableLolanBmsBle bms;
+  sensor::Sensor cell0, cell1, temp0, temp1;
+  bms.set_cell_voltage_sensor(0, &cell0);
+  bms.set_cell_voltage_sensor(1, &cell1);
+  bms.set_temperature_sensor(0, &temp0);
+  bms.set_temperature_sensor(1, &temp1);
+
+  bms.publish_device_unavailable_();
+
+  EXPECT_TRUE(std::isnan(cell0.state));
+  EXPECT_TRUE(std::isnan(cell1.state));
+  EXPECT_TRUE(std::isnan(temp0.state));
+  EXPECT_TRUE(std::isnan(temp1.state));
+}
+
+TEST(LolanBmsBlePublishDeviceUnavailableTest, SetsDynamicTextSensorsToOffline) {
+  TestableLolanBmsBle bms;
+  text_sensor::TextSensor errors, total_runtime_formatted;
+  bms.set_errors_text_sensor(&errors);
+  bms.set_total_runtime_formatted_text_sensor(&total_runtime_formatted);
+
+  bms.publish_device_unavailable_();
+
+  EXPECT_EQ(errors.state, "Offline");
+  EXPECT_EQ(total_runtime_formatted.state, "Offline");
+}
+
+TEST(LolanBmsBlePublishDeviceUnavailableTest, LeavesStaticTextSensorsUnchanged) {
+  TestableLolanBmsBle bms;
+  // lolan_bms_ble has no static identity text sensors — this test is a no-op
+  EXPECT_NO_FATAL_FAILURE(bms.publish_device_unavailable_());
+}
+
+TEST(LolanBmsBlePublishDeviceUnavailableTest, NullSensorsDoNotCrash) {
+  TestableLolanBmsBle bms;
+
+  EXPECT_NO_FATAL_FAILURE(bms.publish_device_unavailable_());
+}
+
 }  // namespace esphome::lolan_bms_ble::testing
