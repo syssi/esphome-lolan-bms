@@ -59,9 +59,10 @@ class TestSensorLists:
 
 class TestBinarySensorDefs:
     def test_binary_sensor_defs_completeness(self):
+        assert binary_sensor.CONF_ONLINE_STATUS in binary_sensor.BINARY_SENSOR_DEFS
         assert binary_sensor.CONF_CHARGING in binary_sensor.BINARY_SENSOR_DEFS
         assert binary_sensor.CONF_DISCHARGING in binary_sensor.BINARY_SENSOR_DEFS
-        assert len(binary_sensor.BINARY_SENSOR_DEFS) == 2
+        assert len(binary_sensor.BINARY_SENSOR_DEFS) == 3
 
 
 class TestTextSensors:

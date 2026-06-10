@@ -29,6 +29,9 @@ class LolanBmsBle :
   void update() override;
   float get_setup_priority() const override { return setup_priority::DATA; }
 
+  void set_online_status_binary_sensor(binary_sensor::BinarySensor *online_status_binary_sensor) {
+    online_status_binary_sensor_ = online_status_binary_sensor;
+  }
   void set_charging_binary_sensor(binary_sensor::BinarySensor *charging_binary_sensor) {
     charging_binary_sensor_ = charging_binary_sensor;
   }
@@ -101,6 +104,7 @@ class LolanBmsBle :
   void set_password(uint32_t password) { this->password_ = password; }
 
  protected:
+  binary_sensor::BinarySensor *online_status_binary_sensor_{nullptr};
   binary_sensor::BinarySensor *charging_binary_sensor_{nullptr};
   binary_sensor::BinarySensor *discharging_binary_sensor_{nullptr};
 
@@ -137,6 +141,7 @@ class LolanBmsBle :
     sensor::Sensor *temperature_sensor_{nullptr};
   } temperatures_[2];
 
+  uint8_t no_response_count_{0};
   uint16_t char_notify_handle_{0};
   uint16_t char_command_handle_{0};
   uint32_t password_ = 12345678;
@@ -145,6 +150,9 @@ class LolanBmsBle :
   void decode_status_data_(const std::vector<uint8_t> &data);
   void decode_cell_info_data_(const std::vector<uint8_t> &data);
   void decode_confirmations_(const std::vector<uint8_t> &data);
+  void publish_device_unavailable_();
+  void reset_online_status_tracker_();
+  void track_online_status_();
   void publish_state_(binary_sensor::BinarySensor *binary_sensor, const bool &state);
   void publish_state_(sensor::Sensor *sensor, float value);
   void publish_state_(switch_::Switch *obj, const bool &state);

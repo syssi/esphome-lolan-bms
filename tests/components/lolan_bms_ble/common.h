@@ -8,6 +8,10 @@ namespace esphome::lolan_bms_ble::testing {
 
 class TestableLolanBmsBle : public LolanBmsBle {
  public:
+  using LolanBmsBle::track_online_status_;
+  using LolanBmsBle::reset_online_status_tracker_;
+  using LolanBmsBle::publish_device_unavailable_;
+  uint8_t get_no_response_count() const { return no_response_count_; }
   using LolanBmsBle::decode_cell_info_data_;
   using LolanBmsBle::decode_confirmations_;
   using LolanBmsBle::decode_settings_data_;

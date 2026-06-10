@@ -12,6 +12,7 @@
 namespace esphome::lolan_bms_ble {
 
 static const char *const TAG = "lolan_bms_ble";
+static const uint8_t MAX_NO_RESPONSE_COUNT = 10;
 
 static const uint16_t LOLAN_BMS_SERVICE_UUID = 0xFFE0;
 static const uint16_t LOLAN_BMS_SERVICE_UUID2 = 0xFFF0;
@@ -82,6 +83,7 @@ static uint16_t crc16_lolan(const uint8_t *data, size_t size) {
 }
 
 void LolanBmsBle::on_lolan_bms_ble_data(const uint8_t &handle, const std::vector<uint8_t> &data) {
+  this->reset_online_status_tracker_();
   if (data.size() > MAX_RESPONSE_SIZE) {
     ESP_LOGW(TAG, "Invalid response received: %s", format_hex_pretty(&data.front(), data.size()).c_str());  // NOLINT
     return;
@@ -438,6 +440,7 @@ void LolanBmsBle::decode_confirmations_(const std::vector<uint8_t> &data) {
 void LolanBmsBle::dump_config() {  // NOLINT(google-readability-function-size,readability-function-size)
   ESP_LOGCONFIG(TAG, "LolanBmsBle:");
 
+  LOG_BINARY_SENSOR("", "Online Status", this->online_status_binary_sensor_);
   LOG_BINARY_SENSOR("", "Charging", this->charging_binary_sensor_);
   LOG_BINARY_SENSOR("", "Discharging", this->discharging_binary_sensor_);
 
@@ -482,6 +485,48 @@ void LolanBmsBle::dump_config() {  // NOLINT(google-readability-function-size,re
   LOG_TEXT_SENSOR("", "Total runtime formatted", this->total_runtime_formatted_text_sensor_);
 }
 
+void LolanBmsBle::track_online_status_() {
+  if (this->no_response_count_ < MAX_NO_RESPONSE_COUNT)
+    this->no_response_count_++;
+  if (this->no_response_count_ == MAX_NO_RESPONSE_COUNT) {
+    this->publish_device_unavailable_();
+    this->no_response_count_++;
+  }
+}
+
+void LolanBmsBle::reset_online_status_tracker_() {
+  this->no_response_count_ = 0;
+  this->publish_state_(this->online_status_binary_sensor_, true);
+}
+
+void LolanBmsBle::publish_device_unavailable_() {
+  this->publish_state_(this->online_status_binary_sensor_, false);
+  this->publish_state_(this->total_voltage_sensor_, NAN);
+  this->publish_state_(this->current_sensor_, NAN);
+  this->publish_state_(this->power_sensor_, NAN);
+  this->publish_state_(this->charging_power_sensor_, NAN);
+  this->publish_state_(this->discharging_power_sensor_, NAN);
+  this->publish_state_(this->error_bitmask_sensor_, NAN);
+  this->publish_state_(this->state_of_charge_sensor_, NAN);
+  this->publish_state_(this->charging_cycles_sensor_, NAN);
+  this->publish_state_(this->min_cell_voltage_sensor_, NAN);
+  this->publish_state_(this->max_cell_voltage_sensor_, NAN);
+  this->publish_state_(this->min_voltage_cell_sensor_, NAN);
+  this->publish_state_(this->max_voltage_cell_sensor_, NAN);
+  this->publish_state_(this->delta_cell_voltage_sensor_, NAN);
+  this->publish_state_(this->average_cell_voltage_sensor_, NAN);
+  this->publish_state_(this->total_runtime_sensor_, NAN);
+  this->publish_state_(this->balancer_voltage_sensor_, NAN);
+  this->publish_state_(this->total_charged_capacity_sensor_, NAN);
+  this->publish_state_(this->total_discharged_capacity_sensor_, NAN);
+  for (auto &cell : this->cells_)
+    this->publish_state_(cell.cell_voltage_sensor_, NAN);
+  for (auto &temp : this->temperatures_)
+    this->publish_state_(temp.temperature_sensor_, NAN);
+  this->publish_state_(this->errors_text_sensor_, "Offline");
+  this->publish_state_(this->total_runtime_formatted_text_sensor_, "Offline");
+}
+
 void LolanBmsBle::publish_state_(binary_sensor::BinarySensor *binary_sensor, const bool &state) {
   if (binary_sensor == nullptr)
     return;
@@ -520,8 +565,6 @@ void LolanBmsBle::gattc_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_t 
     }
     case ESP_GATTC_DISCONNECT_EVT: {
       this->node_state = espbt::ClientState::IDLE;
-
-      // this->publish_state_(this->voltage_sensor_, NAN);
 
       if (this->char_notify_handle_ != 0) {
         auto status = esp_ble_gattc_unregister_for_notify(this->parent()->get_gattc_if(),
@@ -582,6 +625,7 @@ void LolanBmsBle::gattc_event_handler(esp_gattc_cb_event_t event, esp_gatt_if_t 
 }
 
 void LolanBmsBle::update() {
+  this->track_online_status_();
   if (this->node_state != espbt::ClientState::ESTABLISHED) {
     ESP_LOGW(TAG, "[%s] Not connected", ADDR_STR(this->parent_->address_str()));
     return;
