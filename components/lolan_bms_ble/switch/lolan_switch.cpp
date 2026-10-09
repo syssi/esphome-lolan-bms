@@ -2,9 +2,14 @@
 #include "esphome/core/log.h"
 #include "esphome/core/application.h"
 
+// Fallback for ESPHome < 2026.10.0
+#ifndef ESPHOME_LOG_TAG
+#define ESPHOME_LOG_TAG(name, tag) static const char *const name = tag
+#endif
+
 namespace esphome::lolan_bms_ble {
 
-static const char *const TAG = "lolan_bms_ble.switch";
+ESPHOME_LOG_TAG(TAG, "lolan_bms_ble.switch");
 
 void LolanSwitch::dump_config() { LOG_SWITCH("", "LolanBmsBle Switch", this); }
 void LolanSwitch::write_state(bool state) {
