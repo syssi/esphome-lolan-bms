@@ -23,11 +23,11 @@ LOLAN_BMS_BLE_COMPONENT_SCHEMA = cv.Schema(
 )
 
 CONFIG_SCHEMA = cv.All(
-    cv.require_esphome_version(2026, 1, 0),
+    cv.require_esphome_version(2026, 6, 0),
     cv.Schema(
         {
             cv.GenerateID(): cv.declare_id(LolanBmsBle),
-            cv.Optional(CONF_PASSWORD, default="12345678"): cv.uint32_t,
+            cv.Optional(CONF_PASSWORD, default="12345678"): cv.sensitive(cv.uint32_t),
         }
     )
     .extend(ble_client.BLE_CLIENT_SCHEMA)
