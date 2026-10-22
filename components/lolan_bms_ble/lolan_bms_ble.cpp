@@ -2,6 +2,8 @@
 #include "esphome/core/log.h"
 #include "esphome/core/helpers.h"
 
+#include <bit>
+
 // Fallback for ESPHome < 2026.10.0
 #ifndef ESPHOME_LOG_TAG
 #define ESPHOME_LOG_TAG(name, tag) static const char *const name = tag
@@ -86,8 +88,7 @@ static uint16_t crc16_lolan(const uint8_t *data, size_t size) {
 
   crc = 2 * (crc & 0xFFFF);
 
-  // Apply 16-bit left rotation by 3 positions
-  return ((crc << 3) | (crc >> 13)) & 0xFFFF;
+  return std::rotl(crc, 3);
 }
 
 void LolanBmsBle::on_lolan_bms_ble_data(const uint8_t &handle, const std::vector<uint8_t> &data) {
