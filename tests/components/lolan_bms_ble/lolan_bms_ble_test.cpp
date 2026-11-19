@@ -236,7 +236,7 @@ TEST(LolanBmsBleConfirmationTest, InvalidFrameTooShort) {
 TEST(LolanBmsBleSwitchTest, ChargingCommandSent) {
   TestableLolanBmsBle bms;
   bms.char_command_handle_ = 0x20;
-  test_switch_parent = &bms;
+  test_parent = &bms;
   switch_::ApplySwitch<test_switch_apply<0x0001, 0x0002>> charging_switch;
   charging_switch.turn_on();
   // send_command() fails without a BLE connection, so the state is not published
@@ -246,7 +246,7 @@ TEST(LolanBmsBleSwitchTest, ChargingCommandSent) {
 TEST(LolanBmsBleSwitchTest, DischargingCommandSent) {
   TestableLolanBmsBle bms;
   bms.char_command_handle_ = 0x20;
-  test_switch_parent = &bms;
+  test_parent = &bms;
   switch_::ApplySwitch<test_switch_apply<0x0003, 0x0004>> discharging_switch;
   discharging_switch.turn_on();
   // send_command() fails without a BLE connection, so the state is not published
@@ -256,9 +256,8 @@ TEST(LolanBmsBleSwitchTest, DischargingCommandSent) {
 TEST(LolanBmsBleButtonTest, FactoryResetCommandSent) {
   TestableLolanBmsBle bms;
   bms.char_command_handle_ = 0x20;
-  TestButton button;
-  button.set_parent(&bms);
-  button.set_holding_register(0xCCCC);
+  test_parent = &bms;
+  button::ApplyButton<test_factory_reset_apply> button;
   button.press();
 }
 

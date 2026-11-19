@@ -22,25 +22,18 @@ class TestableLolanBmsBle : public LolanBmsBle {
   using LolanBmsBle::char_command_handle_;
 };
 
-// Mirrors the function switch.py generates for an ApplySwitch with publish="on_success"
-inline LolanBmsBle *test_switch_parent{nullptr};  // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
+// The hub the Apply entity functions below call, like the generated ones call ::bms0
+inline LolanBmsBle *test_parent{nullptr};  // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
+// Mirrors the function switch.py generates for an ApplySwitch with publish="on_success"
 template<uint16_t TurnOn, uint16_t TurnOff> void test_switch_apply(switch_::Switch *entity, bool state) {
-  if (test_switch_parent->send_command(state ? TurnOn : TurnOff)) {
+  if (test_parent->send_command(state ? TurnOn : TurnOff)) {
     entity->publish_state(state);
   }
 }
 
-class TestButton : public button::Button, public Component {
- public:
-  void set_parent(LolanBmsBle *parent) { this->parent_ = parent; }
-  void set_holding_register(uint16_t reg) { this->holding_register_ = reg; }
-
- protected:
-  void press_action() override { this->parent_->send_command(this->holding_register_); }
-  LolanBmsBle *parent_{nullptr};
-  uint16_t holding_register_{0};
-};
+// Mirrors the function button.py generates for the factory reset ApplyButton
+inline void test_factory_reset_apply(button::Button * /*entity*/) { test_parent->send_factory_reset(); }
 
 // ── Status frames from tests/esp32-ble-example-faker.yaml ─────────────────────
 // Frame type 0x01 (40 bytes)

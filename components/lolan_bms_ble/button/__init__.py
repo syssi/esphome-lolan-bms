@@ -3,7 +3,7 @@ from esphome.components import button
 import esphome.config_validation as cv
 from esphome.const import CONF_FACTORY_RESET, DEVICE_CLASS_RESTART
 
-from .. import CONF_LOLAN_BMS_BLE_ID, LOLAN_BMS_BLE_COMPONENT_SCHEMA, lolan_bms_ble_ns
+from .. import CONF_LOLAN_BMS_BLE_ID, LOLAN_BMS_BLE_COMPONENT_SCHEMA
 
 DEPENDENCIES = ["lolan_bms_ble"]
 
@@ -21,6 +21,7 @@ ICON_RESET_CHARGING_CYCLES = "mdi:counter"
 ICON_RESET_TOTAL_CHARGED_CAPACITY = "mdi:counter"
 ICON_RESET_TOTAL_DISCHARGED_CAPACITY = "mdi:counter"
 
+# key: command
 BUTTONS = {
     CONF_RETRIEVE_SETTINGS: 0x5600,
     CONF_FACTORY_RESET: 0xCCCC,
@@ -29,24 +30,24 @@ BUTTONS = {
     CONF_RESET_TOTAL_DISCHARGED_CAPACITY: 0xCA00,
 }
 
-LolanButton = lolan_bms_ble_ns.class_("LolanButton", button.Button, cg.Component)
-
 CONFIG_SCHEMA = LOLAN_BMS_BLE_COMPONENT_SCHEMA.extend(
     {
         cv.Optional(CONF_RETRIEVE_SETTINGS): button.button_schema(
-            LolanButton, icon=ICON_RETRIEVE_SETTINGS
+            button.ApplyButton, icon=ICON_RETRIEVE_SETTINGS
         ),
         cv.Optional(CONF_FACTORY_RESET): button.button_schema(
-            LolanButton, icon=ICON_FACTORY_RESET, device_class=DEVICE_CLASS_RESTART
+            button.ApplyButton,
+            icon=ICON_FACTORY_RESET,
+            device_class=DEVICE_CLASS_RESTART,
         ),
         cv.Optional(CONF_RESET_CHARGING_CYCLES): button.button_schema(
-            LolanButton, icon=ICON_RESET_CHARGING_CYCLES
+            button.ApplyButton, icon=ICON_RESET_CHARGING_CYCLES
         ),
         cv.Optional(CONF_RESET_TOTAL_CHARGED_CAPACITY): button.button_schema(
-            LolanButton, icon=ICON_RESET_TOTAL_CHARGED_CAPACITY
+            button.ApplyButton, icon=ICON_RESET_TOTAL_CHARGED_CAPACITY
         ),
         cv.Optional(CONF_RESET_TOTAL_DISCHARGED_CAPACITY): button.button_schema(
-            LolanButton, icon=ICON_RESET_TOTAL_DISCHARGED_CAPACITY
+            button.ApplyButton, icon=ICON_RESET_TOTAL_DISCHARGED_CAPACITY
         ),
     }
 )
@@ -54,10 +55,11 @@ CONFIG_SCHEMA = LOLAN_BMS_BLE_COMPONENT_SCHEMA.extend(
 
 async def to_code(config):
     hub = await cg.get_variable(config[CONF_LOLAN_BMS_BLE_ID])
-    for key, address in BUTTONS.items():
-        if key in config:
-            conf = config[key]
-            var = await button.new_button(conf)
-            await cg.register_component(var, conf)
-            cg.add(var.set_parent(hub))
-            cg.add(var.set_holding_register(address))
+    buttons = button.sub_buttons(config, parent=hub)
+    for key, command in BUTTONS.items():
+        # The factory reset frame carries no password, so it has a method of its own
+        if key == CONF_FACTORY_RESET:
+            apply = "send_factory_reset()"
+        else:
+            apply = f"send_command(0x{command:04X})"
+        await buttons(key, None, apply=apply)
