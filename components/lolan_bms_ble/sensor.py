@@ -1,3 +1,5 @@
+from functools import partial
+
 import esphome.codegen as cg
 from esphome.components import sensor
 import esphome.config_validation as cv
@@ -24,7 +26,7 @@ from esphome.const import (
     UNIT_WATT,
 )
 
-from . import LOLAN_BMS_BLE_COMPONENT_SCHEMA
+from . import CONF_LOLAN_BMS_BLE_ID, LOLAN_BMS_BLE_COMPONENT_SCHEMA
 
 DEPENDENCIES = ["lolan_bms_ble"]
 
@@ -223,21 +225,29 @@ CONFIG_SCHEMA = LOLAN_BMS_BLE_COMPONENT_SCHEMA.extend(
 
 
 async def to_code(config):
-    from . import CONF_LOLAN_BMS_BLE_ID
-
     hub = await cg.get_variable(config[CONF_LOLAN_BMS_BLE_ID])
+    sensors = sensor.sub_sensors(config)
     for i, key in enumerate(TEMPERATURES):
-        if key in config:
-            conf = config[key]
-            sens = await sensor.new_sensor(conf)
-            cg.add(hub.set_temperature_sensor(i, sens))
+        await sensors(key, partial(hub.set_temperature_sensor, i))
     for i, key in enumerate(CELLS):
-        if key in config:
-            conf = config[key]
-            sens = await sensor.new_sensor(conf)
-            cg.add(hub.set_cell_voltage_sensor(i, sens))
-    for key in SENSOR_DEFS:
-        if key in config:
-            conf = config[key]
-            sens = await sensor.new_sensor(conf)
-            cg.add(getattr(hub, f"set_{key}_sensor")(sens))
+        await sensors(key, partial(hub.set_cell_voltage_sensor, i))
+    await sensors(CONF_TOTAL_VOLTAGE, hub.set_total_voltage_sensor)
+    await sensors(CONF_CURRENT, hub.set_current_sensor)
+    await sensors(CONF_POWER, hub.set_power_sensor)
+    await sensors(CONF_CHARGING_POWER, hub.set_charging_power_sensor)
+    await sensors(CONF_DISCHARGING_POWER, hub.set_discharging_power_sensor)
+    await sensors(CONF_ERROR_BITMASK, hub.set_error_bitmask_sensor)
+    await sensors(CONF_STATE_OF_CHARGE, hub.set_state_of_charge_sensor)
+    await sensors(CONF_CHARGING_CYCLES, hub.set_charging_cycles_sensor)
+    await sensors(CONF_MIN_CELL_VOLTAGE, hub.set_min_cell_voltage_sensor)
+    await sensors(CONF_MAX_CELL_VOLTAGE, hub.set_max_cell_voltage_sensor)
+    await sensors(CONF_MIN_VOLTAGE_CELL, hub.set_min_voltage_cell_sensor)
+    await sensors(CONF_MAX_VOLTAGE_CELL, hub.set_max_voltage_cell_sensor)
+    await sensors(CONF_DELTA_CELL_VOLTAGE, hub.set_delta_cell_voltage_sensor)
+    await sensors(CONF_AVERAGE_CELL_VOLTAGE, hub.set_average_cell_voltage_sensor)
+    await sensors(CONF_TOTAL_RUNTIME, hub.set_total_runtime_sensor)
+    await sensors(CONF_BALANCER_VOLTAGE, hub.set_balancer_voltage_sensor)
+    await sensors(CONF_TOTAL_CHARGED_CAPACITY, hub.set_total_charged_capacity_sensor)
+    await sensors(
+        CONF_TOTAL_DISCHARGED_CAPACITY, hub.set_total_discharged_capacity_sensor
+    )

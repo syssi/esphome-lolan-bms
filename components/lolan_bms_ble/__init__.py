@@ -1,7 +1,7 @@
 import esphome.codegen as cg
 from esphome.components import ble_client
 import esphome.config_validation as cv
-from esphome.const import CONF_ID, CONF_PASSWORD
+from esphome.const import CONF_PASSWORD
 
 CODEOWNERS = ["@syssi"]
 DOMAIN = "lolan_bms_ble"
@@ -23,7 +23,7 @@ LOLAN_BMS_BLE_COMPONENT_SCHEMA = cv.Schema(
 )
 
 CONFIG_SCHEMA = cv.All(
-    cv.require_esphome_version(2026, 6, 0),
+    cv.require_esphome_version(2026, 11, 0),
     cv.Schema(
         {
             cv.GenerateID(): cv.declare_id(LolanBmsBle),
@@ -36,8 +36,5 @@ CONFIG_SCHEMA = cv.All(
 
 
 async def to_code(config):
-    var = cg.new_Pvariable(config[CONF_ID])
-    await cg.register_component(var, config)
-    await ble_client.register_ble_node(var, config)
-
+    var = await ble_client.new_ble_node_component(config)
     cg.add(var.set_password(config[CONF_PASSWORD]))

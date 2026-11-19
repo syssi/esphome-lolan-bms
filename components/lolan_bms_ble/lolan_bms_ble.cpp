@@ -4,11 +4,6 @@
 
 #include <bit>
 
-// Fallback for ESPHome < 2026.10.0
-#ifndef ESPHOME_LOG_TAG
-#define ESPHOME_LOG_TAG(name, tag) static const char *const name = tag
-#endif
-
 namespace esphome::lolan_bms_ble {
 
 ESPHOME_LOG_TAG(TAG, "lolan_bms_ble");
@@ -144,52 +139,52 @@ void LolanBmsBle::decode_status_data_(const std::vector<uint8_t> &data) {
   //  0    1  0x01                   Frame type
   //  1    1  0x00
   //  2    1  0x03                   Switch bitmask
-  this->publish_state_(this->discharging_binary_sensor_, (bool) check_bit_(data[2], 1));
-  this->publish_state_(this->charging_binary_sensor_, (bool) check_bit_(data[2], 2));
-  this->publish_state_(this->discharging_switch_, (bool) check_bit_(data[2], 1));
-  this->publish_state_(this->charging_switch_, (bool) check_bit_(data[2], 2));
+  PUBLISH_STATE(this->discharging_binary_sensor_, (bool) check_bit_(data[2], 1));
+  PUBLISH_STATE(this->charging_binary_sensor_, (bool) check_bit_(data[2], 2));
+  PUBLISH_STATE(this->discharging_switch_, (bool) check_bit_(data[2], 1));
+  PUBLISH_STATE(this->charging_switch_, (bool) check_bit_(data[2], 2));
 
   //  3    1  0x00                   Status bitmask
-  this->publish_state_(this->error_bitmask_sensor_, data[3] * 1.0f);
-  this->publish_state_(this->errors_text_sensor_, bitmask_to_string_(ERRORS, ERRORS_SIZE, data[3]));
+  PUBLISH_STATE(this->error_bitmask_sensor_, data[3] * 1.0f);
+  PUBLISH_STATE(this->errors_text_sensor_, bitmask_to_string_(ERRORS, ERRORS_SIZE, data[3]));
 
   //  4    4  0x41 0xb8 0xe6 0xb8    Total voltage
   float total_voltage = ieee_float_(lolan_get_32bit(4));
-  this->publish_state_(this->total_voltage_sensor_, total_voltage);
+  PUBLISH_STATE(this->total_voltage_sensor_, total_voltage);
 
   //  8    4  0x00 0x00 0x00 0x00    Negative current
   //  12   4  0x00 0x00 0x00 0x00    Current
   float negative_current = ieee_float_(lolan_get_32bit(8));
   float positive_current = ieee_float_(lolan_get_32bit(12));
   float current = (negative_current > positive_current) ? negative_current * -1.0f : positive_current;
-  this->publish_state_(this->current_sensor_, current);
+  PUBLISH_STATE(this->current_sensor_, current);
 
   float power = total_voltage * current;
-  this->publish_state_(this->power_sensor_, power);
-  this->publish_state_(this->charging_power_sensor_, std::max(0.0f, power));               // 500W vs 0W -> 500W
-  this->publish_state_(this->discharging_power_sensor_, std::abs(std::min(0.0f, power)));  // -500W vs 0W -> 500W
+  PUBLISH_STATE(this->power_sensor_, power);
+  PUBLISH_STATE(this->charging_power_sensor_, std::max(0.0f, power));               // 500W vs 0W -> 500W
+  PUBLISH_STATE(this->discharging_power_sensor_, std::abs(std::min(0.0f, power)));  // -500W vs 0W -> 500W
 
   //  16   4  0x41 0xd5 0x9f 0x30    Temperature 1
-  this->publish_state_(this->temperatures_[0].temperature_sensor_, ieee_float_(lolan_get_32bit(16)));
+  PUBLISH_STATE(this->temperatures_[0].temperature_sensor_, ieee_float_(lolan_get_32bit(16)));
 
   //  20   4  0x41 0xcd 0x0b 0x30    Temperature 2
-  this->publish_state_(this->temperatures_[1].temperature_sensor_, ieee_float_(lolan_get_32bit(20)));
+  PUBLISH_STATE(this->temperatures_[1].temperature_sensor_, ieee_float_(lolan_get_32bit(20)));
 
   //  24   4  0x42 0x9d 0x93 0x20    Total discharged capacity
-  this->publish_state_(this->total_discharged_capacity_sensor_, ieee_float_(lolan_get_32bit(24)));
+  PUBLISH_STATE(this->total_discharged_capacity_sensor_, ieee_float_(lolan_get_32bit(24)));
 
   //  28   4  0x42 0x47 0x53 0xec    Total charged capacity
-  this->publish_state_(this->total_charged_capacity_sensor_, ieee_float_(lolan_get_32bit(28)));
+  PUBLISH_STATE(this->total_charged_capacity_sensor_, ieee_float_(lolan_get_32bit(28)));
 
   //  32   4  0x00 0x34 0x3f 0x6e    Total runtime
-  this->publish_state_(this->total_runtime_sensor_, lolan_get_32bit(32) * 1.0f);
-  this->publish_state_(this->total_runtime_formatted_text_sensor_, format_total_runtime_(lolan_get_32bit(32)));
+  PUBLISH_STATE(this->total_runtime_sensor_, lolan_get_32bit(32) * 1.0f);
+  PUBLISH_STATE(this->total_runtime_formatted_text_sensor_, format_total_runtime_(lolan_get_32bit(32)));
 
   //  36   2  0x00 0x01              Charging cycles
-  this->publish_state_(this->charging_cycles_sensor_, lolan_get_16bit(36) * 1.0f);
+  PUBLISH_STATE(this->charging_cycles_sensor_, lolan_get_16bit(36) * 1.0f);
 
   //  38   1  0x00 0x27              State of charge
-  this->publish_state_(this->state_of_charge_sensor_, lolan_get_16bit(38) * 1.0f);
+  PUBLISH_STATE(this->state_of_charge_sensor_, lolan_get_16bit(38) * 1.0f);
 }
 
 void LolanBmsBle::decode_cell_info_data_(const std::vector<uint8_t> &data) {
@@ -232,7 +227,7 @@ void LolanBmsBle::decode_cell_info_data_(const std::vector<uint8_t> &data) {
   //  18   1  0x00
   //  19   1  0x00
   //  20   4  0x40 0x56 0x66 0x66  Balancer voltage
-  this->publish_state_(this->balancer_voltage_sensor_, ieee_float_(lolan_get_32bit(20)));
+  PUBLISH_STATE(this->balancer_voltage_sensor_, ieee_float_(lolan_get_32bit(20)));
 
   //  24   4  0x40 0x53 0x33 0x33  Cell voltage 1
   //  28   4  0x40 0x53 0x3a 0xe1  Cell voltage 2
@@ -267,16 +262,16 @@ void LolanBmsBle::decode_cell_info_data_(const std::vector<uint8_t> &data) {
       max_cell_voltage = cell_voltage;
       max_voltage_cell = i + 1;
     }
-    this->publish_state_(this->cells_[i].cell_voltage_sensor_, cell_voltage);
+    PUBLISH_STATE(this->cells_[i].cell_voltage_sensor_, cell_voltage);
   }
   average_cell_voltage = average_cell_voltage / cells;
 
-  this->publish_state_(this->min_cell_voltage_sensor_, min_cell_voltage);
-  this->publish_state_(this->max_cell_voltage_sensor_, max_cell_voltage);
-  this->publish_state_(this->max_voltage_cell_sensor_, (float) max_voltage_cell);
-  this->publish_state_(this->min_voltage_cell_sensor_, (float) min_voltage_cell);
-  this->publish_state_(this->delta_cell_voltage_sensor_, max_cell_voltage - min_cell_voltage);
-  this->publish_state_(this->average_cell_voltage_sensor_, average_cell_voltage);
+  PUBLISH_STATE(this->min_cell_voltage_sensor_, min_cell_voltage);
+  PUBLISH_STATE(this->max_cell_voltage_sensor_, max_cell_voltage);
+  PUBLISH_STATE(this->max_voltage_cell_sensor_, (float) max_voltage_cell);
+  PUBLISH_STATE(this->min_voltage_cell_sensor_, (float) min_voltage_cell);
+  PUBLISH_STATE(this->delta_cell_voltage_sensor_, max_cell_voltage - min_cell_voltage);
+  PUBLISH_STATE(this->average_cell_voltage_sensor_, average_cell_voltage);
 }
 
 void LolanBmsBle::decode_settings_data_(const std::vector<uint8_t> &data) {
@@ -494,6 +489,9 @@ void LolanBmsBle::dump_config() {  // NOLINT(google-readability-function-size,re
 
   LOG_TEXT_SENSOR("", "Errors", this->errors_text_sensor_);
   LOG_TEXT_SENSOR("", "Total runtime formatted", this->total_runtime_formatted_text_sensor_);
+
+  LOG_SWITCH("", "Charging", this->charging_switch_);
+  LOG_SWITCH("", "Discharging", this->discharging_switch_);
 }
 
 void LolanBmsBle::track_online_status_() {
@@ -507,46 +505,39 @@ void LolanBmsBle::track_online_status_() {
 
 void LolanBmsBle::reset_online_status_tracker_() {
   this->no_response_count_ = 0;
-  this->publish_state_(this->online_status_binary_sensor_, true);
+  PUBLISH_STATE(this->online_status_binary_sensor_, true);
 }
 
 void LolanBmsBle::publish_device_unavailable_() {
-  this->publish_state_(this->online_status_binary_sensor_, false);
+  PUBLISH_STATE(this->online_status_binary_sensor_, false);
 
   this->invalidate_binary_sensor_(this->charging_binary_sensor_);
   this->invalidate_binary_sensor_(this->discharging_binary_sensor_);
 
-  this->publish_state_(this->total_voltage_sensor_, NAN);
-  this->publish_state_(this->current_sensor_, NAN);
-  this->publish_state_(this->power_sensor_, NAN);
-  this->publish_state_(this->charging_power_sensor_, NAN);
-  this->publish_state_(this->discharging_power_sensor_, NAN);
-  this->publish_state_(this->error_bitmask_sensor_, NAN);
-  this->publish_state_(this->state_of_charge_sensor_, NAN);
-  this->publish_state_(this->charging_cycles_sensor_, NAN);
-  this->publish_state_(this->min_cell_voltage_sensor_, NAN);
-  this->publish_state_(this->max_cell_voltage_sensor_, NAN);
-  this->publish_state_(this->min_voltage_cell_sensor_, NAN);
-  this->publish_state_(this->max_voltage_cell_sensor_, NAN);
-  this->publish_state_(this->delta_cell_voltage_sensor_, NAN);
-  this->publish_state_(this->average_cell_voltage_sensor_, NAN);
-  this->publish_state_(this->total_runtime_sensor_, NAN);
-  this->publish_state_(this->balancer_voltage_sensor_, NAN);
-  this->publish_state_(this->total_charged_capacity_sensor_, NAN);
-  this->publish_state_(this->total_discharged_capacity_sensor_, NAN);
+  PUBLISH_STATE(this->total_voltage_sensor_, NAN);
+  PUBLISH_STATE(this->current_sensor_, NAN);
+  PUBLISH_STATE(this->power_sensor_, NAN);
+  PUBLISH_STATE(this->charging_power_sensor_, NAN);
+  PUBLISH_STATE(this->discharging_power_sensor_, NAN);
+  PUBLISH_STATE(this->error_bitmask_sensor_, NAN);
+  PUBLISH_STATE(this->state_of_charge_sensor_, NAN);
+  PUBLISH_STATE(this->charging_cycles_sensor_, NAN);
+  PUBLISH_STATE(this->min_cell_voltage_sensor_, NAN);
+  PUBLISH_STATE(this->max_cell_voltage_sensor_, NAN);
+  PUBLISH_STATE(this->min_voltage_cell_sensor_, NAN);
+  PUBLISH_STATE(this->max_voltage_cell_sensor_, NAN);
+  PUBLISH_STATE(this->delta_cell_voltage_sensor_, NAN);
+  PUBLISH_STATE(this->average_cell_voltage_sensor_, NAN);
+  PUBLISH_STATE(this->total_runtime_sensor_, NAN);
+  PUBLISH_STATE(this->balancer_voltage_sensor_, NAN);
+  PUBLISH_STATE(this->total_charged_capacity_sensor_, NAN);
+  PUBLISH_STATE(this->total_discharged_capacity_sensor_, NAN);
   for (auto &cell : this->cells_)
-    this->publish_state_(cell.cell_voltage_sensor_, NAN);
+    PUBLISH_STATE(cell.cell_voltage_sensor_, NAN);
   for (auto &temp : this->temperatures_)
-    this->publish_state_(temp.temperature_sensor_, NAN);
-  this->publish_state_(this->errors_text_sensor_, "Offline");
-  this->publish_state_(this->total_runtime_formatted_text_sensor_, "Offline");
-}
-
-void LolanBmsBle::publish_state_(binary_sensor::BinarySensor *binary_sensor, const bool &state) {
-  if (binary_sensor == nullptr)
-    return;
-
-  binary_sensor->publish_state(state);
+    PUBLISH_STATE(temp.temperature_sensor_, NAN);
+  PUBLISH_STATE(this->errors_text_sensor_, "Offline");
+  PUBLISH_STATE(this->total_runtime_formatted_text_sensor_, "Offline");
 }
 
 void LolanBmsBle::invalidate_binary_sensor_(binary_sensor::BinarySensor *binary_sensor) {
@@ -554,27 +545,6 @@ void LolanBmsBle::invalidate_binary_sensor_(binary_sensor::BinarySensor *binary_
     return;
 
   binary_sensor->invalidate_state();
-}
-
-void LolanBmsBle::publish_state_(sensor::Sensor *sensor, float value) {
-  if (sensor == nullptr)
-    return;
-
-  sensor->publish_state(value);
-}
-
-void LolanBmsBle::publish_state_(switch_::Switch *obj, const bool &state) {
-  if (obj == nullptr)
-    return;
-
-  obj->publish_state(state);
-}
-
-void LolanBmsBle::publish_state_(text_sensor::TextSensor *text_sensor, const std::string &state) {
-  if (text_sensor == nullptr)
-    return;
-
-  text_sensor->publish_state(state);
 }
 
 #ifdef USE_ESP32

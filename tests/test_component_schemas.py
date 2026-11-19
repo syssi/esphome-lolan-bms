@@ -66,10 +66,10 @@ class TestBinarySensorDefs:
 
 
 class TestTextSensors:
-    def test_text_sensors_list(self):
-        assert text_sensor.CONF_ERRORS in text_sensor.TEXT_SENSORS
-        assert text_sensor.CONF_TOTAL_RUNTIME_FORMATTED in text_sensor.TEXT_SENSORS
-        assert len(text_sensor.TEXT_SENSORS) == 2
+    def test_text_sensors_in_schema(self):
+        keys = {str(key) for key in text_sensor.CONFIG_SCHEMA.schema}
+        assert text_sensor.CONF_ERRORS in keys
+        assert text_sensor.CONF_TOTAL_RUNTIME_FORMATTED in keys
 
 
 class TestSwitchConstants:

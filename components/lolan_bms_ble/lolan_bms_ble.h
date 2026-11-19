@@ -29,74 +29,41 @@ class LolanBmsBle :
   void update() override;
   float get_setup_priority() const override { return setup_priority::DATA; }
 
-  void set_online_status_binary_sensor(binary_sensor::BinarySensor *online_status_binary_sensor) {
-    online_status_binary_sensor_ = online_status_binary_sensor;
-  }
-  void set_charging_binary_sensor(binary_sensor::BinarySensor *charging_binary_sensor) {
-    charging_binary_sensor_ = charging_binary_sensor;
-  }
-  void set_discharging_binary_sensor(binary_sensor::BinarySensor *discharging_binary_sensor) {
-    discharging_binary_sensor_ = discharging_binary_sensor;
-  }
+  SUB_BINARY_SENSOR(online_status)
+  SUB_BINARY_SENSOR(charging)
+  SUB_BINARY_SENSOR(discharging)
 
-  void set_total_voltage_sensor(sensor::Sensor *total_voltage_sensor) { total_voltage_sensor_ = total_voltage_sensor; }
-  void set_current_sensor(sensor::Sensor *current_sensor) { current_sensor_ = current_sensor; }
-  void set_power_sensor(sensor::Sensor *power_sensor) { power_sensor_ = power_sensor; }
-  void set_charging_power_sensor(sensor::Sensor *charging_power_sensor) {
-    charging_power_sensor_ = charging_power_sensor;
-  }
-  void set_discharging_power_sensor(sensor::Sensor *discharging_power_sensor) {
-    discharging_power_sensor_ = discharging_power_sensor;
-  }
-  void set_error_bitmask_sensor(sensor::Sensor *error_bitmask_sensor) { error_bitmask_sensor_ = error_bitmask_sensor; }
-  void set_state_of_charge_sensor(sensor::Sensor *state_of_charge_sensor) {
-    state_of_charge_sensor_ = state_of_charge_sensor;
-  }
-  void set_charging_cycles_sensor(sensor::Sensor *charging_cycles_sensor) {
-    charging_cycles_sensor_ = charging_cycles_sensor;
-  }
-  void set_min_cell_voltage_sensor(sensor::Sensor *min_cell_voltage_sensor) {
-    min_cell_voltage_sensor_ = min_cell_voltage_sensor;
-  }
-  void set_max_cell_voltage_sensor(sensor::Sensor *max_cell_voltage_sensor) {
-    max_cell_voltage_sensor_ = max_cell_voltage_sensor;
-  }
-  void set_min_voltage_cell_sensor(sensor::Sensor *min_voltage_cell_sensor) {
-    min_voltage_cell_sensor_ = min_voltage_cell_sensor;
-  }
-  void set_max_voltage_cell_sensor(sensor::Sensor *max_voltage_cell_sensor) {
-    max_voltage_cell_sensor_ = max_voltage_cell_sensor;
-  }
-  void set_delta_cell_voltage_sensor(sensor::Sensor *delta_cell_voltage_sensor) {
-    delta_cell_voltage_sensor_ = delta_cell_voltage_sensor;
-  }
-  void set_average_cell_voltage_sensor(sensor::Sensor *average_cell_voltage_sensor) {
-    average_cell_voltage_sensor_ = average_cell_voltage_sensor;
-  }
+  SUB_SENSOR(total_voltage)
+  SUB_SENSOR(current)
+  SUB_SENSOR(power)
+  SUB_SENSOR(charging_power)
+  SUB_SENSOR(discharging_power)
+  SUB_SENSOR(error_bitmask)
+  SUB_SENSOR(state_of_charge)
+  SUB_SENSOR(charging_cycles)
+  SUB_SENSOR(min_cell_voltage)
+  SUB_SENSOR(max_cell_voltage)
+  SUB_SENSOR(min_voltage_cell)
+  SUB_SENSOR(max_voltage_cell)
+  SUB_SENSOR(delta_cell_voltage)
+  SUB_SENSOR(average_cell_voltage)
+  SUB_SENSOR(total_runtime)
+  SUB_SENSOR(balancer_voltage)
+  SUB_SENSOR(total_charged_capacity)
+  SUB_SENSOR(total_discharged_capacity)
+
+  SUB_TEXT_SENSOR(errors)
+  SUB_TEXT_SENSOR(total_runtime_formatted)
+
+  SUB_SWITCH(charging)
+  SUB_SWITCH(discharging)
+
   void set_cell_voltage_sensor(uint8_t cell, sensor::Sensor *cell_voltage_sensor) {
     this->cells_[cell].cell_voltage_sensor_ = cell_voltage_sensor;
   }
   void set_temperature_sensor(uint8_t temperature, sensor::Sensor *temperature_sensor) {
     this->temperatures_[temperature].temperature_sensor_ = temperature_sensor;
   }
-  void set_total_runtime_sensor(sensor::Sensor *total_runtime_sensor) { total_runtime_sensor_ = total_runtime_sensor; }
-  void set_balancer_voltage_sensor(sensor::Sensor *balancer_voltage_sensor) {
-    balancer_voltage_sensor_ = balancer_voltage_sensor;
-  }
-  void set_total_charged_capacity_sensor(sensor::Sensor *total_charged_capacity_sensor) {
-    total_charged_capacity_sensor_ = total_charged_capacity_sensor;
-  }
-  void set_total_discharged_capacity_sensor(sensor::Sensor *total_discharged_capacity_sensor) {
-    total_discharged_capacity_sensor_ = total_discharged_capacity_sensor;
-  }
-
-  void set_errors_text_sensor(text_sensor::TextSensor *errors_text_sensor) { errors_text_sensor_ = errors_text_sensor; }
-  void set_total_runtime_formatted_text_sensor(text_sensor::TextSensor *total_runtime_formatted_text_sensor) {
-    total_runtime_formatted_text_sensor_ = total_runtime_formatted_text_sensor;
-  }
-
-  void set_charging_switch(switch_::Switch *charging_switch) { charging_switch_ = charging_switch; }
-  void set_discharging_switch(switch_::Switch *discharging_switch) { discharging_switch_ = discharging_switch; }
 
   void on_lolan_bms_ble_data(const uint8_t &handle, const std::vector<uint8_t> &data);
   bool send_command(uint16_t function);
@@ -104,35 +71,6 @@ class LolanBmsBle :
   void set_password(uint32_t password) { this->password_ = password; }
 
  protected:
-  binary_sensor::BinarySensor *online_status_binary_sensor_{nullptr};
-  binary_sensor::BinarySensor *charging_binary_sensor_{nullptr};
-  binary_sensor::BinarySensor *discharging_binary_sensor_{nullptr};
-
-  sensor::Sensor *total_voltage_sensor_{nullptr};
-  sensor::Sensor *current_sensor_{nullptr};
-  sensor::Sensor *power_sensor_{nullptr};
-  sensor::Sensor *charging_power_sensor_{nullptr};
-  sensor::Sensor *discharging_power_sensor_{nullptr};
-  sensor::Sensor *error_bitmask_sensor_{nullptr};
-  sensor::Sensor *state_of_charge_sensor_{nullptr};
-  sensor::Sensor *charging_cycles_sensor_{nullptr};
-  sensor::Sensor *min_cell_voltage_sensor_{nullptr};
-  sensor::Sensor *max_cell_voltage_sensor_{nullptr};
-  sensor::Sensor *min_voltage_cell_sensor_{nullptr};
-  sensor::Sensor *max_voltage_cell_sensor_{nullptr};
-  sensor::Sensor *delta_cell_voltage_sensor_{nullptr};
-  sensor::Sensor *average_cell_voltage_sensor_{nullptr};
-  sensor::Sensor *total_runtime_sensor_{nullptr};
-  sensor::Sensor *balancer_voltage_sensor_{nullptr};
-  sensor::Sensor *total_charged_capacity_sensor_{nullptr};
-  sensor::Sensor *total_discharged_capacity_sensor_{nullptr};
-
-  switch_::Switch *charging_switch_{nullptr};
-  switch_::Switch *discharging_switch_{nullptr};
-
-  text_sensor::TextSensor *errors_text_sensor_{nullptr};
-  text_sensor::TextSensor *total_runtime_formatted_text_sensor_{nullptr};
-
   struct Cell {
     sensor::Sensor *cell_voltage_sensor_{nullptr};
   } cells_[16];
@@ -153,11 +91,7 @@ class LolanBmsBle :
   void publish_device_unavailable_();
   void reset_online_status_tracker_();
   void track_online_status_();
-  void publish_state_(binary_sensor::BinarySensor *binary_sensor, const bool &state);
   void invalidate_binary_sensor_(binary_sensor::BinarySensor *binary_sensor);
-  void publish_state_(sensor::Sensor *sensor, float value);
-  void publish_state_(switch_::Switch *obj, const bool &state);
-  void publish_state_(text_sensor::TextSensor *text_sensor, const std::string &state);
   std::string bitmask_to_string_(const char *const messages[], const uint8_t &messages_size, const uint8_t &mask);
 
   bool check_bit_(uint16_t mask, uint16_t flag) { return (mask & flag) == flag; }

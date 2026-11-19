@@ -22,33 +22,18 @@ class TestableLolanBmsBle : public LolanBmsBle {
   using LolanBmsBle::char_command_handle_;
 };
 
-class TestSwitch : public switch_::Switch {
- public:
-  void set_parent(LolanBmsBle *parent) { this->parent_ = parent; }
-  void set_command_turn_on(uint16_t cmd) { this->command_turn_on_ = cmd; }
-  void set_command_turn_off(uint16_t cmd) { this->command_turn_off_ = cmd; }
+// The hub the Apply entity functions below call, like the generated ones call ::bms0
+inline LolanBmsBle *test_parent{nullptr};  // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
- protected:
-  void write_state(bool state) override {
-    if (this->parent_->send_command(state ? this->command_turn_on_ : this->command_turn_off_)) {
-      this->publish_state(state);
-    }
+// Mirrors the function switch.py generates for an ApplySwitch with publish="on_success"
+template<uint16_t TurnOn, uint16_t TurnOff> void test_switch_apply(switch_::Switch *entity, bool state) {
+  if (test_parent->send_command(state ? TurnOn : TurnOff)) {
+    entity->publish_state(state);
   }
-  LolanBmsBle *parent_{nullptr};
-  uint16_t command_turn_on_{0};
-  uint16_t command_turn_off_{0};
-};
+}
 
-class TestButton : public button::Button, public Component {
- public:
-  void set_parent(LolanBmsBle *parent) { this->parent_ = parent; }
-  void set_holding_register(uint16_t reg) { this->holding_register_ = reg; }
-
- protected:
-  void press_action() override { this->parent_->send_command(this->holding_register_); }
-  LolanBmsBle *parent_{nullptr};
-  uint16_t holding_register_{0};
-};
+// Mirrors the function button.py generates for the factory reset ApplyButton
+inline void test_factory_reset_apply(button::Button * /*entity*/) { test_parent->send_factory_reset(); }
 
 // ── Status frames from tests/esp32-ble-example-faker.yaml ─────────────────────
 // Frame type 0x01 (40 bytes)
