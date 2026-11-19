@@ -38,7 +38,7 @@ repos:
       - id: pylint
         args: [--persistent=n, components]
         pass_filenames: false
-        additional_dependencies: [esphome]
+        additional_dependencies: ["esphome>=2026.11.0"]
   - repo: local
     hooks:
       - id: pytest
@@ -47,4 +47,4 @@ repos:
         language: python
         types: [python]
         pass_filenames: false
-        additional_dependencies: [pytest, esphome]
+        additional_dependencies: [pytest, "esphome>=2026.11.0"]
