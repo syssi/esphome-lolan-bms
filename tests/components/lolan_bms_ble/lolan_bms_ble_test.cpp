@@ -236,21 +236,21 @@ TEST(LolanBmsBleConfirmationTest, InvalidFrameTooShort) {
 TEST(LolanBmsBleSwitchTest, ChargingCommandSent) {
   TestableLolanBmsBle bms;
   bms.char_command_handle_ = 0x20;
-  TestSwitch charging_switch;
-  charging_switch.set_parent(&bms);
-  charging_switch.set_command_turn_on(0x0001);
-  charging_switch.set_command_turn_off(0x0002);
+  test_switch_parent = &bms;
+  switch_::ApplySwitch<test_switch_apply<0x0001, 0x0002>> charging_switch;
   charging_switch.turn_on();
+  // send_command() fails without a BLE connection, so the state is not published
+  EXPECT_FALSE(charging_switch.state);
 }
 
 TEST(LolanBmsBleSwitchTest, DischargingCommandSent) {
   TestableLolanBmsBle bms;
   bms.char_command_handle_ = 0x20;
-  TestSwitch discharging_switch;
-  discharging_switch.set_parent(&bms);
-  discharging_switch.set_command_turn_on(0x0003);
-  discharging_switch.set_command_turn_off(0x0004);
+  test_switch_parent = &bms;
+  switch_::ApplySwitch<test_switch_apply<0x0003, 0x0004>> discharging_switch;
   discharging_switch.turn_on();
+  // send_command() fails without a BLE connection, so the state is not published
+  EXPECT_FALSE(discharging_switch.state);
 }
 
 TEST(LolanBmsBleButtonTest, FactoryResetCommandSent) {

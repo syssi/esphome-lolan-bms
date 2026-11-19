@@ -22,22 +22,14 @@ class TestableLolanBmsBle : public LolanBmsBle {
   using LolanBmsBle::char_command_handle_;
 };
 
-class TestSwitch : public switch_::Switch {
- public:
-  void set_parent(LolanBmsBle *parent) { this->parent_ = parent; }
-  void set_command_turn_on(uint16_t cmd) { this->command_turn_on_ = cmd; }
-  void set_command_turn_off(uint16_t cmd) { this->command_turn_off_ = cmd; }
+// Mirrors the function switch.py generates for an ApplySwitch with publish="on_success"
+inline LolanBmsBle *test_switch_parent{nullptr};  // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
 
- protected:
-  void write_state(bool state) override {
-    if (this->parent_->send_command(state ? this->command_turn_on_ : this->command_turn_off_)) {
-      this->publish_state(state);
-    }
+template<uint16_t TurnOn, uint16_t TurnOff> void test_switch_apply(switch_::Switch *entity, bool state) {
+  if (test_switch_parent->send_command(state ? TurnOn : TurnOff)) {
+    entity->publish_state(state);
   }
-  LolanBmsBle *parent_{nullptr};
-  uint16_t command_turn_on_{0};
-  uint16_t command_turn_off_{0};
-};
+}
 
 class TestButton : public button::Button, public Component {
  public:
