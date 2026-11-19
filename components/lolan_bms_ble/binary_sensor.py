@@ -3,7 +3,7 @@ from esphome.components import binary_sensor
 import esphome.config_validation as cv
 from esphome.const import DEVICE_CLASS_CONNECTIVITY, ENTITY_CATEGORY_DIAGNOSTIC
 
-from . import LOLAN_BMS_BLE_COMPONENT_SCHEMA
+from . import CONF_LOLAN_BMS_BLE_ID, LOLAN_BMS_BLE_COMPONENT_SCHEMA
 from .const import CONF_CHARGING, CONF_DISCHARGING
 
 DEPENDENCIES = ["lolan_bms_ble"]
@@ -37,11 +37,8 @@ CONFIG_SCHEMA = LOLAN_BMS_BLE_COMPONENT_SCHEMA.extend(
 
 
 async def to_code(config):
-    from . import CONF_LOLAN_BMS_BLE_ID
-
     hub = await cg.get_variable(config[CONF_LOLAN_BMS_BLE_ID])
-    for key in BINARY_SENSOR_DEFS:
-        if key in config:
-            conf = config[key]
-            sens = await binary_sensor.new_binary_sensor(conf)
-            cg.add(getattr(hub, f"set_{key}_binary_sensor")(sens))
+    binary_sensors = binary_sensor.sub_binary_sensors(config)
+    await binary_sensors(CONF_ONLINE_STATUS, hub.set_online_status_binary_sensor)
+    await binary_sensors(CONF_CHARGING, hub.set_charging_binary_sensor)
+    await binary_sensors(CONF_DISCHARGING, hub.set_discharging_binary_sensor)
