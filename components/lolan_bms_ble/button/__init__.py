@@ -29,7 +29,7 @@ BUTTONS = {
     CONF_RESET_TOTAL_DISCHARGED_CAPACITY: 0xCA00,
 }
 
-LolanButton = lolan_bms_ble_ns.class_("LolanButton", button.Button, cg.Component)
+LolanButton = lolan_bms_ble_ns.class_("LolanButton", button.Button)
 
 CONFIG_SCHEMA = LOLAN_BMS_BLE_COMPONENT_SCHEMA.extend(
     {
@@ -58,6 +58,5 @@ async def to_code(config):
         if key in config:
             conf = config[key]
             var = await button.new_button(conf)
-            await cg.register_component(var, conf)
             cg.add(var.set_parent(hub))
             cg.add(var.set_holding_register(address))

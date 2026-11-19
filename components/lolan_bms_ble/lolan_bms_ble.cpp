@@ -494,6 +494,9 @@ void LolanBmsBle::dump_config() {  // NOLINT(google-readability-function-size,re
 
   LOG_TEXT_SENSOR("", "Errors", this->errors_text_sensor_);
   LOG_TEXT_SENSOR("", "Total runtime formatted", this->total_runtime_formatted_text_sensor_);
+
+  LOG_SWITCH("", "Charging", this->charging_switch_);
+  LOG_SWITCH("", "Discharging", this->discharging_switch_);
 }
 
 void LolanBmsBle::track_online_status_() {
