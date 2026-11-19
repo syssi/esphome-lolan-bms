@@ -18,7 +18,7 @@ SWITCHES = {
     CONF_DISCHARGING: [0x8555, 0x8600],
 }
 
-LolanSwitch = lolan_bms_ble_ns.class_("LolanSwitch", switch.Switch, cg.Component)
+LolanSwitch = lolan_bms_ble_ns.class_("LolanSwitch", switch.Switch)
 
 CONFIG_SCHEMA = LOLAN_BMS_BLE_COMPONENT_SCHEMA.extend(
     {
@@ -38,7 +38,6 @@ async def to_code(config):
         if key in config:
             conf = config[key]
             var = await switch.new_switch(conf)
-            await cg.register_component(var, conf)
             cg.add(getattr(hub, f"set_{key}_switch")(var))
             cg.add(var.set_parent(hub))
             cg.add(var.set_command_turn_on(address[0]))

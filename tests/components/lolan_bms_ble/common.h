@@ -39,7 +39,7 @@ class TestSwitch : public switch_::Switch {
   uint16_t command_turn_off_{0};
 };
 
-class TestButton : public button::Button, public Component {
+class TestButton : public button::Button {
  public:
   void set_parent(LolanBmsBle *parent) { this->parent_ = parent; }
   void set_holding_register(uint16_t reg) { this->holding_register_ = reg; }
